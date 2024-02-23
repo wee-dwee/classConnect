@@ -28,12 +28,41 @@ body {
     color: #fff;
     border-radius: 10px;
     padding: 30px 40px;
-    position: fixed; /* Fixed position */
-  /* Center vertically */
+    position: fixed; 
     left: 35%;
     top: 20%;
-    transform: translate(-50%, -50%); /* Center the box */
-    animation: bounce 3s ease-in-out 1 forwards; 
+    transform: translate(-50%, -50%);
+    animation: bounce 5s ease-in-out 1 forwards; 
+}
+@media(max-width: 1200px)
+{
+  .wrapper{
+    left:25%;
+  }
+}
+
+@media(max-width: 650px)
+{
+  .wrapper{
+    left:15%;
+    width: 380px;
+  }
+}
+
+@media(max-width: 500px)
+{
+  .wrapper{
+    left:7%;
+    width: 350px;
+  }
+}
+
+@media(max-width: 400px)
+{
+  .wrapper{
+    left:7%;
+    width: 300px;
+  }
 }
 
 
@@ -155,6 +184,5 @@ body {
     }
   }
 
-  
-  /* Other CSS styles... */
+
   
