@@ -6,8 +6,9 @@ import {Route,Switch} from 'react-router-dom';
 function App() {
   return (
     <div>
-        <Loginform/>
+        
         <Switch>
+            <Route exact path='/'><Loginform/></Route>
             <Route exact path='/forgotpassword'>
               <ForgotPassword />
             </Route>

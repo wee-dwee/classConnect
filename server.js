@@ -14,7 +14,10 @@ app.use(bodyParser.json());
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+})
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err));
+
 
 const User = mongoose.model('User', {
   username: String,
@@ -29,7 +32,9 @@ app.post('/api/register', async (req, res) => {
 
   user.save()
   .then(() => {
+    console.log(user.username);
     res.status(200).send('User registered successfully');
+    
   })
   .catch((err) => {
     res.status(500).send('Error registering new user');
@@ -39,13 +44,26 @@ app.post('/api/register', async (req, res) => {
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
 
-  const user = await User.findOne({ username });
+  try {
+    const user = await User.findOne({ username: username });
 
-  if (user && (await bcrypt.compare(password, user.password))) {
+    if (!user) {
+      console.log("User not found");
+      return res.status(401).send('Invalid credentials');
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      console.log("invalid")
+      return res.status(401).send('Invalid credentials');
+    }
+
     const token = jwt.sign({ username }, 'secret-key', { expiresIn: '1h' });
     res.json({ token });
-  } else {
-    res.status(401).send('Invalid credentials');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
