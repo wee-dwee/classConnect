@@ -32,7 +32,7 @@ app.post('/api/register', async (req, res) => {
 
   user.save()
   .then(() => {
-    console.log(user.username);
+    //console.log(user.username);
     res.status(200).send('User registered successfully');
     
   })
@@ -48,14 +48,14 @@ app.post('/api/login', async (req, res) => {
     const user = await User.findOne({ username: username });
 
     if (!user) {
-      console.log("User not found");
+      //console.log("User not found");
       return res.status(401).send('Invalid credentials');
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      console.log("invalid")
+      //console.log("invalid")
       return res.status(401).send('Invalid credentials');
     }
 
@@ -66,7 +66,30 @@ app.post('/api/login', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+app.post('/api/update-password', async (req, res) => {
+  const { username, newPassword } = req.body;
 
+  try {
+    // Find the user by username
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update the user's password
+    user.password = hashedPassword;
+    await user.save();
+
+    return res.status(200).json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Error updating password:', error);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
