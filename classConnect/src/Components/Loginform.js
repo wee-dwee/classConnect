@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Loginform() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
 
@@ -13,7 +13,7 @@ export default function Loginform() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3002/api/login', {
-        email,
+        username,
         password
       });
       // Handle successful login, e.g., redirect to dashboard
@@ -34,8 +34,8 @@ export default function Loginform() {
             <input
               type="email"
               placeholder='Enter Email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
             />
             <FaEnvelope className='icon' />
