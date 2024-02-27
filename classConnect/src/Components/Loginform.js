@@ -3,12 +3,13 @@ import './LoginForm.css';
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 export default function Loginform() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-
+  const history = useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -18,6 +19,7 @@ export default function Loginform() {
       });
       // Handle successful login, e.g., redirect to dashboard
       console.log('Login successful', response.data);
+      history.push('/home');
     } catch (err) {
       setError('Invalid email or password. Please try again.');
       console.error('Login error:', err);

@@ -60,7 +60,9 @@ app.post('/api/login', async (req, res) => {
     }
 
     const token = jwt.sign({ username }, 'secret-key', { expiresIn: '1h' });
-    res.json({ token });
+    //res.json({ token });
+    //res.cookie('token', token, { httpOnly: true });
+    res.redirect('/');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
@@ -89,6 +91,9 @@ app.post('/api/update-password', async (req, res) => {
     console.error('Error updating password:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
+});
+app.get('/', (req, res) => {
+  res.send('Welcome to the homepage!');
 });
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
