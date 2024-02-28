@@ -61,7 +61,7 @@ app.post('/api/login', async (req, res) => {
 
     const token = jwt.sign({ username }, 'secret-key', { expiresIn: '1h' });
     //res.json({ token });
-    //res.cookie('token', token, { httpOnly: true });
+    res.cookie('token', token, { httpOnly: true });
     res.redirect('/');
   } catch (error) {
     console.error(error);
@@ -95,6 +95,7 @@ app.post('/api/update-password', async (req, res) => {
 app.get('/', (req, res) => {
   res.send('Welcome to the homepage!');
 });
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

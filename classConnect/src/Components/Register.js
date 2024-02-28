@@ -3,12 +3,13 @@ import './LoginForm.css';
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-
+  const history = useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -18,6 +19,7 @@ export default function Register() {
       });
       // Handle successful registration
       console.log('Registration successful', response.data);
+      history.push('/');
     } catch (err) {
       setError('Registration failed. Please try again.');
       console.error('Registration error:', err);
