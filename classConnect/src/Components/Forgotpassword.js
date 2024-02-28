@@ -8,27 +8,48 @@ export default function Forgotpassword() {
   const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-
+  const [otp, setOtp] = useState('');
+  const [stage, setStage] = useState(0); // 0: initial, 1: OTP entered, 2: New password entered
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Make sure new password and confirm password match
-    if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
+    if (stage === 0) {
+      try {
+        await axios.post('http://localhost:3002/api/send-otp', { username });
+        setStage(1);
+      } catch (error) {
+        console.error('Error sending OTP:', error);
+      }
+    }else if (stage === 1) {
+      try {
+        const response = await axios.post('http://localhost:3002/api/verify-otp', { username, otp });
+        if (response.data.success) {
+          setStage(2);
+        } else {
+          alert("Invalid OTP");
+        }
+      } catch (error) {
+        console.error('Error verifying OTP:', error);
+      }
+    } else if (stage === 2) {
+      if (newPassword !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+      }
 
-    try {
-      // Make the POST request to your server endpoint
-      const response = await axios.post('http://localhost:3002/api/update-password', {
-        username: username,
-        newPassword: newPassword
-      });
-      console.log(response.data); // Assuming server responds with some data
-      // Handle success, maybe redirect user or show a success message
-    } catch (error) {
-      console.error('Error updating password:', error);
-      // Handle error, show an error message to the user
+      try {
+        const response = await axios.post('http://localhost:3002/api/update-password', {
+          username,
+          newPassword
+        });
+        console.log(response.data);
+        // Handle success, maybe redirect user or show a success message
+      } catch (error) {
+        console.error('Error updating password:', error);
+        // Handle error, show an error message to the user
+      }
     }
   };
 
@@ -47,26 +68,41 @@ export default function Forgotpassword() {
             />
             <FaUser className='icon'/>
           </div>
-          <div className="input-box">
-            <input 
-              type="password" 
-              placeholder='Enter New Password' 
-              required
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-            />
-            <FaLock className='icon'/>
-          </div>
-          <div className="input-box">
-            <input 
-              type="password" 
-              placeholder='Confirm Password' 
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            <FaLock className='icon'/>
-          </div>
+          {stage >= 1 && (
+            <div className="input-box">
+              <input 
+                type="text" 
+                placeholder='Enter OTP' 
+                required
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+              />
+            </div>
+          )}
+          {stage >= 2 && (
+            <>
+              <div className="input-box">
+                <input 
+                  type="password" 
+                  placeholder='Enter New Password' 
+                  required
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <FaLock className='icon'/>
+              </div>
+              <div className="input-box">
+                <input 
+                  type="password" 
+                  placeholder='Confirm Password' 
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <FaLock className='icon'/>
+              </div>
+            </>
+          )}
           <button type="submit">Submit</button>
         </form>
       </div>

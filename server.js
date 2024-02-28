@@ -3,9 +3,11 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const uri = "mongodb+srv://dweej26:test123@cluster0.wgtewyq.mongodb.net/";
 const app = express();
+require('dotenv').config();
 const PORT = process.env.PORT || 3002;
 
 app.use(cors());
@@ -95,7 +97,48 @@ app.post('/api/update-password', async (req, res) => {
 app.get('/', (req, res) => {
   res.send('Welcome to the homepage!');
 });
-
+app.post('/api/send-otp', async (req, res) => {
+  const { username } = req.body; 
+  
+  const user = await User.findOne({ username });
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  const otp = Math.floor(1000 + Math.random() * 9000);
+  
+  try {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
+      },
+      secure: false
+    });
+    
+    // Email options
+    
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: username,
+      subject: 'OTP for password Reset',
+      text: `Your OTP for password is ${otp}`
+    };
+    
+    // Send email
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+      } else {
+        console.log('Email sent:', info.response);
+      }
+  })
+ } catch (error) {
+    console.error('Error sending OTP:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+  
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
