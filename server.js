@@ -53,9 +53,7 @@ app.post('/api/login', async (req, res) => {
       //console.log("User not found");
       return res.status(401).send('Invalid credentials');
     }
-
     const isPasswordValid = await bcrypt.compare(password, user.password);
-
     if (!isPasswordValid) {
       //console.log("invalid")
       return res.status(401).send('Invalid credentials');
@@ -99,6 +97,7 @@ app.get('/', (req, res) => {
 });
 app.post('/api/send-otp', async (req, res) => {
   const { username } = req.body; 
+  console.log(username);
   
   const user = await User.findOne({ username });
   if (!user) {
@@ -130,14 +129,13 @@ app.post('/api/send-otp', async (req, res) => {
       if (error) {
         console.error('Error sending email:', error);
       } else {
-        //console.log('Email sent:', info.response);
+        console.log('Email sent:', info.response);
       }
   })
  } catch (error) {
     console.error('Error sending OTP:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-  
 });
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

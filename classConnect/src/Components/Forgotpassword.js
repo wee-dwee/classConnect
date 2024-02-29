@@ -14,11 +14,11 @@ export default function Forgotpassword() {
   const [password, setPassword] = useState('');
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (stage === 0) {
+    if (stage == 0) {
       try {
-        await axios.post('http://localhost:3002/api/send-otp', { username });
+        axios.post('http://localhost:3002/api/send-otp', { username });
         setStage(1);
+        setUsername('');
       } catch (error) {
         console.error('Error sending OTP:', error);
       }
@@ -57,18 +57,26 @@ export default function Forgotpassword() {
     <div className="login">
       <div className='wrapper'>
         <form onSubmit={handleSubmit}>
-          <h1>Forgot Password?</h1>
+          {stage===0 && (
+              <>
+                <h1>Forgot Password?</h1>
           <div className="input-box">
             <input 
-              type="text" 
-              placeholder='Username' 
+              type="email" 
+              placeholder='Enter Email' 
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
             <FaUser className='icon'/>
           </div>
-          {stage >= 1 && (
+              </>
+          )}
+          
+          
+          {stage === 1 && (
+            <>
+              <h1>Enter OTP</h1>
             <div className="input-box">
               <input 
                 type="text" 
@@ -78,9 +86,12 @@ export default function Forgotpassword() {
                 onChange={(e) => setOtp(e.target.value)}
               />
             </div>
+            </>
+            
           )}
-          {stage >= 2 && (
+          {stage === 2 && (
             <>
+              <h1>Change Password</h1>
               <div className="input-box">
                 <input 
                   type="password" 

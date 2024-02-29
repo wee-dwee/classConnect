@@ -9,6 +9,8 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const [name,setName] = useState('');
+  const [age,setAge] = useState('');
   const history = useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -32,6 +34,26 @@ export default function Register() {
         <form onSubmit={handleSubmit}>
           <h1>Register</h1>
           {error && <div className="error">{error}</div>}
+          <div className="input-box">
+            <input
+              type="text"
+              placeholder='Enter Name'
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+            <FaEnvelope className='icon'/>
+          </div>
+          <div className="input-box">
+            <input
+              type="integer"
+              placeholder='Enter Age'
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              required
+            />
+            <FaEnvelope className='icon'/>
+          </div>
           <div className="input-box">
             <input
               type="email"
