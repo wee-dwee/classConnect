@@ -122,7 +122,7 @@ app.post('/api/send-otp', async (req, res) => {
       from: process.env.EMAIL,
       to: username,
       subject: 'OTP for password Reset',
-      text: `Your OTP for password is ${otp}`
+      text: `Your OTP for password reset is ${otp}`
     };
     
     // Send email
@@ -130,7 +130,7 @@ app.post('/api/send-otp', async (req, res) => {
       if (error) {
         console.error('Error sending email:', error);
       } else {
-        console.log('Email sent:', info.response);
+        //console.log('Email sent:', info.response);
       }
   })
  } catch (error) {
