@@ -7,6 +7,7 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const uri = "mongodb+srv://dweej26:test123@cluster0.wgtewyq.mongodb.net/";
 const app = express();
+const multer  = require('multer');
 require('dotenv').config();
 const PORT = process.env.PORT || 3002;
 
@@ -29,6 +30,7 @@ const profileSchema = new mongoose.Schema({
   name: String,
   email: String,
   bio: String,
+  age: String,
   image: String,
 });
 const Profile = mongoose.model('Profile', profileSchema);
@@ -49,8 +51,8 @@ app.post('/profiles', upload.single('image'), async (req, res) => {
     // For simplicity, we are just encoding the image buffer as base64 and storing it in the database
     const image = `data:image/png;base64,${imageBuffer.toString('base64')}`;
 
-    const newProfile = await Profile.create({ username, email, bio, image });
-    res.json(newProfile);
+    
+    
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -95,21 +97,24 @@ app.delete('/profiles/:id', async (req, res) => {
 });
 
 app.post('/api/register', async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
+  try {
+    const { name, age, username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = new User({ username, password: hashedPassword });
+    // Save user
+    const user = new User({ username, password: hashedPassword });
+    await user.save();
 
-  user.save()
-  .then(() => {
-    //console.log(user.username);
-    res.status(200).send('User registered successfully');
-    
-  })
-  .catch((err) => {
-    res.status(500).send('Error registering new user');
-  });
+    // Save profile
+    const newProfile = new Profile({ name: name, age: age, email: username });
+    await newProfile.save();
+
+    res.status(200).send('User registered successfully and profile created!');
+  } catch (error) {
+    res.status(500).send('Error registering new user or creating profile');
+  }
 });
+
 
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;

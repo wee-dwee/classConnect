@@ -23,6 +23,8 @@ export default function Register() {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:3002/api/register', {
+        name,
+        age,
         username,
         password
       });
