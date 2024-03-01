@@ -2,29 +2,38 @@ import React, { useState } from 'react';
 import './LoginForm.css';
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link , useHistory } from 'react-router-dom';
 
 export default function Forgotpassword() {
   const [username, setUsername] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [otp, setOtp] = useState('');
-  const [stage, setStage] = useState(0); // 0: initial, 1: OTP entered, 2: New password entered
+  const [mailOTP,setMailOTP] = useState('');
+  const [stage, setStage] = useState(0); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (stage == 0) {
       try {
-        axios.post('http://localhost:3002/api/send-otp', { username });
+        const response = await axios.post('http://localhost:3002/api/send-otp', { username });
+        const { message, otp } = response.data;
+        
+        if (message) {
+        alert(message); // Display the message
+        setMailOTP(otp);
         setStage(1);
-        setUsername('');
+      } else {
+        console.error('Error sending OTP:', response.data.error);
+      }
       } catch (error) {
         console.error('Error sending OTP:', error);
       }
     }else if (stage === 1) {
       try {
-        const response = await axios.post('http://localhost:3002/api/verify-otp', { username, otp });
+        const response = await axios.post('http://localhost:3002/api/verify-otp', { otp, mailOTP: mailOTP.toString()});
         if (response.data.success) {
           setStage(2);
         } else {
@@ -44,7 +53,9 @@ export default function Forgotpassword() {
           username,
           newPassword
         });
-        console.log(response.data);
+        alert("Password Updated Successfully!"); 
+        setUsername('');
+        history.push('/');
         // Handle success, maybe redirect user or show a success message
       } catch (error) {
         console.error('Error updating password:', error);

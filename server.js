@@ -95,9 +95,10 @@ app.post('/api/update-password', async (req, res) => {
 app.get('/', (req, res) => {
   res.send('Welcome to the homepage!');
 });
+
+
 app.post('/api/send-otp', async (req, res) => {
   const { username } = req.body; 
-  console.log(username);
   
   const user = await User.findOne({ username });
   if (!user) {
@@ -115,28 +116,41 @@ app.post('/api/send-otp', async (req, res) => {
       secure: false
     });
     
-    // Email options
-    
     const mailOptions = {
       from: process.env.EMAIL,
       to: username,
-      subject: 'OTP for password Reset',
+      subject: 'OTP for Password Reset',
       text: `Your OTP for password reset is ${otp}`
     };
     
-    // Send email
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         console.error('Error sending email:', error);
+        res.status(500).json({ error: 'Failed to send OTP. Please try again.' }); // Send error response if email fails
       } else {
         console.log('Email sent:', info.response);
+        res.status(200).json({ message: 'OTP sent successfully', otp: otp }); // Send success response with OTP
       }
-  })
- } catch (error) {
+    });
+  } catch (error) {
     console.error('Error sending OTP:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+app.post('/api/verify-otp', async (req, res) => {
+  const { otp, mailOTP } = req.body;
+  try {
+    if (otp === mailOTP) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
+  } catch (error) {
+    console.error('Error verifying OTP:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
