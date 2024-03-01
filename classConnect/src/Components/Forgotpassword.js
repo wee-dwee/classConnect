@@ -11,44 +11,51 @@ export default function Forgotpassword() {
   const [otp, setOtp] = useState('');
   const [mailOTP,setMailOTP] = useState('');
   const [stage, setStage] = useState(0); 
+  const [error, setError] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (stage == 0) {
       try {
+        setError(null);
         const response = await axios.post('http://localhost:3002/api/send-otp', { username });
         const { message, otp } = response.data;
         
         if (message) {
         alert(message); // Display the message
         setMailOTP(otp);
+        
         setStage(1);
       } else {
         console.error('Error sending OTP:', response.data.error);
       }
       } catch (error) {
+        setError('Invalid email. Please try again.');
         console.error('Error sending OTP:', error);
       }
     }else if (stage === 1) {
       try {
+        setError(null);
         const response = await axios.post('http://localhost:3002/api/verify-otp', { otp, mailOTP: mailOTP.toString()});
         if (response.data.success) {
           setStage(2);
         } else {
-          alert("Invalid OTP");
+          setError('Invalid OTP. Please try again.');
         }
       } catch (error) {
         console.error('Error verifying OTP:', error);
       }
     } else if (stage === 2) {
       if (newPassword !== confirmPassword) {
-        alert("Passwords do not match");
+        setError("Passwords do not match");
         return;
       }
 
       try {
+        setError(null);
         const response = await axios.post('http://localhost:3002/api/update-password', {
           username,
           newPassword
@@ -58,6 +65,7 @@ export default function Forgotpassword() {
         history.push('/');
         // Handle success, maybe redirect user or show a success message
       } catch (error) {
+        setError("Password not updated. PLease try again!");
         console.error('Error updating password:', error);
         // Handle error, show an error message to the user
       }
@@ -71,6 +79,7 @@ export default function Forgotpassword() {
           {stage===0 && (
               <>
                 <h1>Forgot Password?</h1>
+                {error && <div className="error" style={{ color: 'red' }}>{error}</div>}
           <div className="input-box">
             <input 
               type="email" 
@@ -88,6 +97,7 @@ export default function Forgotpassword() {
           {stage === 1 && (
             <>
               <h1>Enter OTP</h1>
+              {error && <div className="error" style={{ color: 'red' }}>{error}</div>}
             <div className="input-box">
               <input 
                 type="text" 
@@ -103,6 +113,7 @@ export default function Forgotpassword() {
           {stage === 2 && (
             <>
               <h1>Change Password</h1>
+              {error && <div className="error" style={{ color: 'red' }}>{error}</div>}
               <div className="input-box">
                 <input 
                   type="password" 
