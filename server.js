@@ -29,9 +29,32 @@ const profileSchema = new mongoose.Schema({
   name: String,
   email: String,
   bio: String,
+  image: String,
 });
 const Profile = mongoose.model('Profile', profileSchema);
 // Get all profiles
+app.use(bodyParser.json());
+
+// Set up multer for handling file uploads
+const storage = multer.memoryStorage(); // You can adjust storage settings as needed
+const upload = multer({ storage: storage });
+
+// Create a new profile with an image
+app.post('/profiles', upload.single('image'), async (req, res) => {
+  try {
+    const { username, email, bio } = req.body;
+    const imageBuffer = req.file.buffer;
+
+    // Here you can save the image to your preferred storage solution (e.g., AWS S3, Firebase Storage)
+    // For simplicity, we are just encoding the image buffer as base64 and storing it in the database
+    const image = `data:image/png;base64,${imageBuffer.toString('base64')}`;
+
+    const newProfile = await Profile.create({ username, email, bio, image });
+    res.json(newProfile);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 app.get('/profiles', async (req, res) => {
   try {
     const profiles = await Profile.find();
