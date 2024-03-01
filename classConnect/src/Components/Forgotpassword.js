@@ -3,6 +3,7 @@ import './LoginForm.css';
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import axios from 'axios';
 import { Link , useHistory } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Forgotpassword() {
   const [username, setUsername] = useState('');
@@ -14,7 +15,18 @@ export default function Forgotpassword() {
   const [error, setError] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showcPassword, setcShowPassword] = useState(false);
   const history = useHistory();
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const togglePasswordVisibility1 = () => {
+    setcShowPassword(!showcPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -115,25 +127,41 @@ export default function Forgotpassword() {
               <h1>Change Password</h1>
               {error && <div className="error" style={{ color: 'red' }}>{error}</div>}
               <div className="input-box">
-                <input 
-                  type="password" 
-                  placeholder='Enter New Password' 
-                  required
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                />
-                <FaLock className='icon'/>
-              </div>
-              <div className="input-box">
-                <input 
-                  type="password" 
-                  placeholder='Confirm Password' 
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-                <FaLock className='icon'/>
-              </div>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter New Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {password ? (
+              showPassword ? (
+                <FaEyeSlash className="icon" onClick={togglePasswordVisibility} />
+              ) : (
+                <FaEye className="icon" onClick={togglePasswordVisibility} />
+              )
+            ) : (
+              <FaLock className='icon'/>
+            )}
+          </div>
+          <div className="input-box">
+            <input
+              type={showcPassword ? 'text' : 'password'}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              required
+            />
+            {confirmPassword ? (
+              showcPassword ? (
+                <FaEyeSlash className="icon" onClick={togglePasswordVisibility1} />
+              ) : (
+                <FaEye className="icon" onClick={togglePasswordVisibility1} />
+              )
+            ) : (
+              <FaLock className='icon'/>
+            )}
+          </div>
             </>
           )}
           <button type="submit">Submit</button>
