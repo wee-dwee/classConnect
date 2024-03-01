@@ -25,6 +25,51 @@ const User = mongoose.model('User', {
   username: String,
   password: String,
 });
+const profileSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  bio: String,
+});
+const Profile = mongoose.model('Profile', profileSchema);
+// Get all profiles
+app.get('/profiles', async (req, res) => {
+  try {
+    const profiles = await Profile.find();
+    res.json(profiles);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get a specific profile by ID
+app.get('/profiles/:id', async (req, res) => {
+  try {
+    const profile = await Profile.findById(req.params.id);
+    res.json(profile);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update a profile by ID
+app.put('/profiles/:id', async (req, res) => {
+  try {
+    const updatedProfile = await Profile.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedProfile);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete a profile by ID
+app.delete('/profiles/:id', async (req, res) => {
+  try {
+    await Profile.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Profile deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
