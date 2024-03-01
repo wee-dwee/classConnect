@@ -5,10 +5,11 @@ const cors = require('cors');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-const uri = "mongodb+srv://dweej26:test123@cluster0.wgtewyq.mongodb.net/";
+require('dotenv').config();
+const uri = process.env.URI;
 const app = express();
 const multer  = require('multer');
-require('dotenv').config();
+
 const PORT = process.env.PORT || 3002;
 
 app.use(cors());
