@@ -130,11 +130,11 @@ export default function Forgotpassword() {
             <input
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter New Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
               required
             />
-            {password ? (
+            {newPassword ? (
               showPassword ? (
                 <FaEyeSlash className="icon" onClick={togglePasswordVisibility} />
               ) : (
