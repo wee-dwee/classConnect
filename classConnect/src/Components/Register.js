@@ -4,14 +4,21 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
   const [name,setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [age,setAge] = useState('');
   const history = useHistory();
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -21,6 +28,7 @@ export default function Register() {
       });
       // Handle successful registration
       console.log('Registration successful', response.data);
+      window.alert('Registration successful');
       history.push('/');
     } catch (err) {
       setError('Registration failed. Please try again.');
@@ -33,7 +41,7 @@ export default function Register() {
       <div className='wrapper'>
         <form onSubmit={handleSubmit}>
           <h1>Register</h1>
-          {error && <div className="error">{error}</div>}
+          {error && <div className="error" style={{ color: 'red' }}>{error}</div>}
           <div className="input-box">
             <input
               type="text"
@@ -66,13 +74,21 @@ export default function Register() {
           </div>
           <div className="input-box">
             <input
-              type="password"
-              placeholder='Enter Password'
+              type={showPassword ? 'text' : 'password'}
+              placeholder="Enter Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <FaLock className='icon'/>
+            {password ? (
+              showPassword ? (
+                <FaEyeSlash className="icon" onClick={togglePasswordVisibility} />
+              ) : (
+                <FaEye className="icon" onClick={togglePasswordVisibility} />
+              )
+            ) : (
+              <FaLock className='icon'/>
+            )}
           </div>
           <button type="submit">Register</button>
           <div className="register-link">
