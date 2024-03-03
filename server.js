@@ -23,10 +23,6 @@ mongoose.connect(uri, {
 .catch(err => console.error('MongoDB connection error:', err));
 
 
-const User = mongoose.model('User', {
-  username: String,
-  password: String,
-});
 const profileSchema = new mongoose.Schema({
   name: String,
   email: String,
@@ -34,7 +30,20 @@ const profileSchema = new mongoose.Schema({
   age: String,
   image: String,
 });
+
 const Profile = mongoose.model('Profile', profileSchema);
+
+const userSchema = new mongoose.Schema({
+  username: String,
+  password: String,
+  profile: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile',
+  },
+});
+
+const User = mongoose.model('User', userSchema);
+
 // Get all profiles
 app.use(bodyParser.json());
 
