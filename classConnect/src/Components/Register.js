@@ -10,9 +10,10 @@ export default function Register() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const [name,setName] = useState('');
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+  const [isInstructor, setIsInstructor] = useState(false); // New field
   const [showPassword, setShowPassword] = useState(false);
-  const [age,setAge] = useState('');
   const history = useHistory();
 
   const togglePasswordVisibility = () => {
@@ -24,9 +25,9 @@ export default function Register() {
     try {
       const response = await axios.post('http://localhost:3002/api/register', {
         name,
-        age,
         username,
-        password
+        password,
+        isInstructor, // Include the isInstructor field in the request
       });
       // Handle successful registration
       console.log('Registration successful', response.data);
@@ -50,16 +51,6 @@ export default function Register() {
               placeholder='Enter Name'
               value={name}
               onChange={(e) => setName(e.target.value)}
-              required
-            />
-            <FaEnvelope className='icon'/>
-          </div>
-          <div className="input-box">
-            <input
-              type="integer"
-              placeholder='Enter Age'
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
               required
             />
             <FaEnvelope className='icon'/>
@@ -91,6 +82,16 @@ export default function Register() {
             ) : (
               <FaLock className='icon'/>
             )}
+          </div>
+          <div className="input-box">
+            <label>
+              <input
+                type="checkbox"
+                checked={isInstructor}
+                onChange={() => setIsInstructor(!isInstructor)}
+              />
+              Is Instructor
+            </label>
           </div>
           <button type="submit">Register</button>
           <div className="register-link">

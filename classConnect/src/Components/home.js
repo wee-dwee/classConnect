@@ -4,18 +4,14 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 
 function Home() {
-  const [message, setMessage] = useState('');
+  const [profile, setProfile] = useState({});
   const location = useLocation();
 
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
-    axios.get('http://localhost:3002/', {
-      params: {
-        username: location.state.id,
-      },
-    })
+    axios.get(`http://localhost:3002/profiles/${location.state.username}`)
       .then(response => {
-        setMessage(response.data);
+        setProfile(response.data); // Assuming response.data is an object
       })
       .catch(error => {
         console.error('Error fetching data:', error);
@@ -25,8 +21,10 @@ function Home() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>{message}</h1>
-        <h1>{location.state.id}</h1>
+        <h1>Name: {profile.name}</h1>
+        <p>Email: {profile.email}</p>
+        <p>Bio: {profile.bio}</p>
+        <p>Image: {profile.image}</p>
       </header>
     </div>
   );

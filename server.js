@@ -27,7 +27,6 @@ const profileSchema = new mongoose.Schema({
   name: String,
   email: String,
   bio: String,
-  age: String,
   image: String,
 });
 
@@ -36,6 +35,7 @@ const Profile = mongoose.model('Profile', profileSchema);
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
+  isInstructor:Boolean,
   profile: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile',
@@ -77,30 +77,14 @@ app.get('/profiles', async (req, res) => {
 });
 
 // Get a specific profile by ID
-app.get('/profiles/:id', async (req, res) => {
+app.get('/profiles/:username', async (req, res) => {
   try {
-    const profile = await Profile.findById(req.params.id);
+    const profile = await Profile.findOne({ email: req.params.username });
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
     res.json(profile);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Update a profile by ID
-app.put('/profiles/:id', async (req, res) => {
-  try {
-    const updatedProfile = await Profile.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedProfile);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Delete a profile by ID
-app.delete('/profiles/:id', async (req, res) => {
-  try {
-    await Profile.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Profile deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -108,15 +92,15 @@ app.delete('/profiles/:id', async (req, res) => {
 
 app.post('/api/register', async (req, res) => {
   try {
-    const { name, age, username, password } = req.body;
+    const { name, username, password ,isInstructor} = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Save user
-    const user = new User({ username, password: hashedPassword });
+    const user = new User({ username, password: hashedPassword,isInstructor:isInstructor});
     await user.save();
 
     // Save profile
-    const newProfile = new Profile({ name: name, age: age, email: username });
+    const newProfile = new Profile({ name: name, email: username });
     await newProfile.save();
 
     res.status(200).send('User registered successfully and profile created!');

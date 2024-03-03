@@ -28,7 +28,7 @@ export default function Loginform() {
       // Handle successful login, e.g., redirect to dashboard
       console.log('Login successful', response.data);
       window.alert('Login successfull.');
-      history.push('/home',{id:username});
+      history.push('/home',{username:username});
     } catch (err) {
       setError('Invalid email or password. Please try again.');
       console.error('Login error:', err);
