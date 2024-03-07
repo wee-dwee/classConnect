@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+import Footer from './Footer.js';
 
 function Home() {
   const [profile, setProfile] = useState({});
@@ -26,7 +27,9 @@ function Home() {
         <p>Bio: {profile.bio}</p>
         <p>Image: {profile.image}</p>
       </header>
+      <Footer/>
     </div>
+    
   );
 }
 
