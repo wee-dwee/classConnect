@@ -92,23 +92,31 @@ app.get('/profiles/:username', async (req, res) => {
 
 app.post('/api/register', async (req, res) => {
   try {
-    const { name, username, password ,isInstructor} = req.body;
+    const { name, username, password, isInstructor } = req.body;
+
+    // Check if the username already exists
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).send('Username already exists. Please choose a different username.');
+    }
+
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Save user
-    const user = new User({ username, password: hashedPassword,isInstructor:isInstructor});
+    const user = new User({ username, password: hashedPassword, isInstructor });
     await user.save();
 
     // Save profile
-    const newProfile = new Profile({ name: name, email: username });
+    const newProfile = new Profile({ name, email: username });
     await newProfile.save();
 
     res.status(200).send('User registered successfully and profile created!');
   } catch (error) {
+    console.error(error);
     res.status(500).send('Error registering new user or creating profile');
   }
 });
-
 
 app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
