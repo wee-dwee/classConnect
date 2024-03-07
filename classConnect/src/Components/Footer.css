@@ -7,9 +7,8 @@
   font-family: "Poppins", sans-serif;
 }
 
-body {
+.foo {
   display: flex;
-  background: #333;
   justify-content: flex-end;
   align-items: flex-end;
   min-height: 100vh;
