@@ -83,16 +83,18 @@ export default function Register() {
               <FaLock className='icon'/>
             )}
           </div>
-          <div className="input-box">
-            <label>
-              <input
-                type="checkbox"
-                checked={isInstructor}
-                onChange={() => setIsInstructor(!isInstructor)}
-              />
-              Is Instructor
-            </label>
-          </div>
+          <div className="remember-forget" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+  <label style={{ display: 'flex', alignItems: 'center'}}>
+    Are you an Instructor
+    <input
+      type="checkbox"
+      checked={isInstructor}
+      onChange={() => setIsInstructor(!isInstructor)}
+      style={{ marginLeft: '10px',borderRadius: '50%', width: '20px', height: '20px' }}
+    />
+  </label>
+</div>
+
           <button type="submit">Register</button>
           <div className="register-link">
             <p>Already have an account? <Link to='/'>Login</Link></p>
