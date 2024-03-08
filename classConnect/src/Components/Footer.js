@@ -4,7 +4,7 @@ import './Footer.css';
 
 const Footer = () => {
   return (
-    <div classname="foo">
+    <div className="foo">
           <footer className="footer">
           <div className="waves">
             <div className="wave" id="wave1"></div>
@@ -19,7 +19,7 @@ const Footer = () => {
             <li className="menu__item"><a className="menu__link" href="#">Team</a></li>
             <li className="menu__item"><a className="menu__link" href="#">Contact</a></li>
           </ul> */}
-          <p>&copy;Copyright : ClassConnect</p>
+          <p>&copy;Copyright : ClassConnect by ProjectDAVS</p>
         </footer>
     </div>
     

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import Footer from './Footer.js';
-
+import Navbar from './Navbar.js';
 function Home() {
   const [profile, setProfile] = useState({});
   const location = useLocation();
@@ -21,6 +21,7 @@ function Home() {
 
   return (
     <div className="App">
+      <Navbar />
       <header className="App-header">
         <h1>Name: {profile.name}</h1>
         <p>Email: {profile.email}</p>
