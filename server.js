@@ -143,6 +143,33 @@ app.post('/api/login', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+app.post('/upload_image/:username',async(req,res)=>{
+  try{
+      {
+        const username = req.params.username;
+        const file = req.body.file;
+        if (!file) {
+          return res.status(400).json({ error: 'No file part in the request' });
+        }
+        if (!['.jpg', '.jpeg', '.png'].includes(file.originalname.slice(-4).toLowerCase())) {
+          return res.status(400).json({ error: 'Unsupported file format. Only .jpg, .jpeg, .png are allowed.' });
+        }
+        const base64Data = fs.readFileSync(file.path, { encoding: 'base64'});
+        const result = await Profile.findOneAndUpdate(
+          { email: username },
+          { $set: { image: base64Data } }
+        )
+        if (!result.value) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+        return res.status(200).json({ success: true, message: 'Image uploaded and user profile updated successfully' });
+        } 
+    }
+  catch(error)
+  {
+      res.status(500).json({error:error.message});
+  }
+})
 app.post('/api/update-password', async (req, res) => {
   const { username, newPassword } = req.body;
 
