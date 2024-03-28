@@ -2,6 +2,7 @@ import './App.css';
 import Loginform from './Components/Loginform';
 import Register from './Components/Register';
 import ForgotPassword from './Components/Forgotpassword';
+import Profile from './Components/Profile';
 import {Route,Switch} from 'react-router-dom';
 import Home from './Components/home';
 function App() {
@@ -18,6 +19,9 @@ function App() {
             </Route>
             <Route exact path='/home'>
               <Home />
+            </Route>
+            <Route exact path='/seeprofile'>
+              <Profile />
             </Route>
         </Switch>
     </div>

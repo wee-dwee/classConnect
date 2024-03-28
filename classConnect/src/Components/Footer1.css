@@ -14,7 +14,8 @@
 }
 
 .footer {
-  position: relative;
+  position: absolute;
+  bottom: 0;
   width: 100vw;
   background: #3586ff;
   min-height: 20px;

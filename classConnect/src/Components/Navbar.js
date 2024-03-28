@@ -1,44 +1,3 @@
-// import { useRef } from "react";
-// import { FaBars, FaTimes } from "react-icons/fa";
-// import './Navbar.css';
-
-// function Navbar() {
-// 	const navRef = useRef();
-
-// 	const showNavbar = () => {
-// 		navRef.current.classList.toggle(
-// 			"responsive_nav"
-// 		);
-// 	};
-
-// 	return (
-//         <div className="navbar">
-//                 <header>
-//                 <h3>ClassConnect</h3>
-//                 <nav ref={navRef}>
-//                     {/* <a href="/#">Classes</a> */}
-//                     <a href="/#">Join a Class</a>
-//                     {/* <a href="/#">Blog</a>
-//                     <a href="/#">About me</a> */}
-//                     <button
-//                         className="nav-btn nav-close-btn"
-//                         onClick={showNavbar}>
-//                         <FaTimes />
-//                     </button>
-//                 </nav>
-//                 <button
-//                     className="nav-btn"
-//                     onClick={showNavbar}>
-//                     <FaBars />
-//                 </button>
-//             </header>
-//         </div>
-		
-// 	);
-// }
-
-// export default Navbar;
-
 import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -54,9 +13,9 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ClassIcon from '@mui/icons-material/Class';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useHistory } from 'react-router-dom'; // Import useHistory
 
-
-const pages = ['Join a Class', 'About Us','Contact Us'];
+const pages = ['Join a Class', 'About Us', 'Contact Us'];
 const settings = ['Profile', 'Edit Profile', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -65,6 +24,7 @@ function ResponsiveAppBar() {
   const isMediumScreen = useMediaQuery('(max-width: 1400px)');
   const isSmallScreen = useMediaQuery('(max-width: 1100px)');
   const isExtraSmallScreen = useMediaQuery('(max-width: 970px)');
+  const history = useHistory(); // Initialize useHistory
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -79,6 +39,12 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleProfileClick = () => {
+    // Redirect to the profile page
+    history.push('/seeprofile');
+    handleCloseUserMenu(); // Close the menu after redirection
   };
 
   return (
@@ -103,6 +69,7 @@ function ResponsiveAppBar() {
             ClassConnect
           </Typography>
 
+          {/* Navigation Menu */}
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -133,7 +100,7 @@ function ResponsiveAppBar() {
               }}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} sx={{marginLeft:"auto"}} >
+                <MenuItem key={page} onClick={handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
                   <Typography textAlign="center" sx={{ fontFamily: 'Arial, sans-serif' }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -157,32 +124,34 @@ function ResponsiveAppBar() {
           >
             ClassConnect
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }}}>
+          {/* Pages */}
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
                 sx={{
-                    my: 2,
-                    color: 'white',
-                    display: 'block',
-                    fontFamily: 'serif',
-                    transition: 'all 0.3s ease-in-out', 
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)', 
-                    },
-                  }}
+                  my: 2,
+                  color: 'white',
+                  display: 'block',
+                  fontFamily: 'serif',
+                  transition: 'all 0.3s ease-in-out',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  },
+                }}
               >
                 {page}
               </Button>
             ))}
           </Box>
 
+          {/* Profile */}
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random"
-                 sx={{
+                  sx={{
                     width: 40,
                     height: 40,
                     transition: 'all 0.3s ease-in-out', // Add transition for smooth animation
@@ -191,9 +160,10 @@ function ResponsiveAppBar() {
                       height: 60, // Enlarge height on hover
                     },
                   }}
-                 />
+                />
               </IconButton>
             </Tooltip>
+            {/* User Menu */}
             <Menu
               sx={{ mt: '45px' }}
               id="menu-appbar"
@@ -211,7 +181,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={setting === 'Profile' ? handleProfileClick : handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}
@@ -222,4 +192,5 @@ function ResponsiveAppBar() {
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;
