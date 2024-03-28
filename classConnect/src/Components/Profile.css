@@ -5,7 +5,7 @@
   margin: auto;
   margin-top: 80px;
   background: rgb(229, 224, 224);
-   /* Adjusted min-height */
+  /* Adjusted min-height */
 }
 
 .gradient {
@@ -29,6 +29,7 @@
   margin-top: -75px;
   padding: 5px;
   background: white;
+  transition: transform 0.3s ease; /* Added transition for image size change */
 }
 
 .profile-title {
@@ -72,7 +73,16 @@
   }
 }
 
-.create-box{
+.create-box {
   height: 95vh;
   margin: auto;
+}
+
+.enlarged-image {
+  transform: scale(1.5); /* Adjust the scale factor as needed */
+}
+
+.profile-down img:hover {
+  /* Change cursor to pointer when hovering over the image */
+  cursor: pointer;
 }
