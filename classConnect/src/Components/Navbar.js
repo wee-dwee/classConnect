@@ -56,7 +56,7 @@ import ClassIcon from '@mui/icons-material/Class';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 
-const pages = ['Home Page', 'Join a Class', 'About Us','Contact Us'];
+const pages = ['Join a Class', 'About Us','Contact Us'];
 const settings = ['Profile', 'Edit Profile', 'Logout'];
 
 function ResponsiveAppBar() {
@@ -83,7 +83,7 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
+      <Container maxWidth="false">
         <Toolbar disableGutters>
           <ClassIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
           <Typography
@@ -91,7 +91,7 @@ function ResponsiveAppBar() {
             noWrap
             component="a"
             sx={{
-              mr: isExtraSmallScreen ? 10 : isSmallScreen ? 15 : isMediumScreen ? 25 : 40,
+              mr: isExtraSmallScreen ? 15 : isSmallScreen ? 20 : isMediumScreen ? 35 : 60,
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
@@ -150,7 +150,7 @@ function ResponsiveAppBar() {
               flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
+              letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
