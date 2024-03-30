@@ -18,7 +18,7 @@ import { useHistory } from 'react-router-dom'; // Import useHistory
 const pages = ['Join a Class', 'About Us', 'Contact Us'];
 const settings = ['Profile', 'Edit Profile', 'Logout'];
 
-function ResponsiveAppBar() {
+function ResponsiveAppBar({username}) {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const isMediumScreen = useMediaQuery('(max-width: 1400px)');
@@ -43,7 +43,7 @@ function ResponsiveAppBar() {
 
   const handleProfileClick = () => {
     // Redirect to the profile page
-    history.push('/seeprofile');
+    history.push(`/seeprofile/${username}`);
     handleCloseUserMenu(); // Close the menu after redirection
   };
 

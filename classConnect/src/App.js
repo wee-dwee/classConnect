@@ -7,6 +7,7 @@ import Profile from './Components/Profile';
 import Home from './Components/home'; // Assuming you have a Home component
 import { Route, Switch, Link, useLocation } from 'react-router-dom';
 import { UserContextProvider } from './UserContext';
+import Navbar from './Components/Navbar';
 
 function App() {
   const location = useLocation();
@@ -19,6 +20,7 @@ function App() {
   return (
     <div>
       <UserContextProvider>
+        <Navbar username={username}/>
         <Switch>
           <Route exact path='/'>
             <Loginform setUsername={setUsernameFromLoginForm} />
@@ -32,7 +34,7 @@ function App() {
           <Route exact path='/home'>
             <Home />
           </Route>
-          <Route exact path='/seeprofile'>
+          {/* <Route exact path='/seeprofile'>
             <Link
               to={{
                 pathname:  `/seeprofile/${username}`,
@@ -41,7 +43,7 @@ function App() {
             >
               See Profile
             </Link>
-          </Route>
+          </Route> */}
           <Route exact path='/seeprofile/:username'>
             <Profile />
           </Route>
