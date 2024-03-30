@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-
-function ImageUpload() {
+import {Link, useLocation, useParams } from 'react-router-dom'; // Added useParams
+function ImageUpload({}) {
   const [image, setImage] = useState('');
-
+  const { username } = useParams(); 
   function convertToBase64(e) {
     console.log(e);
     var reader = new FileReader();
@@ -18,7 +18,7 @@ function ImageUpload() {
   return (
     <div className='auth-wrapper'>
       <div className='auth-inner' style={{ width: 'auto' }}>
-        <div>Let's Upload Image</div>
+        <div>Let's Upload Image for your account: {username}</div> {/* Display username */}
         <input accept='image/*' type='file' onChange={convertToBase64} />
         {image === '' || image === null ? null : <img src={image} alt='Uploaded' />}
       </div>

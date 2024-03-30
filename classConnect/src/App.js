@@ -1,19 +1,19 @@
-import React, { useState, useCallback } from 'react';
-import './App.css';
-import Loginform from './Components/Loginform';
-import Register from './Components/Register';
-import ForgotPassword from './Components/Forgotpassword';
-import Profile from './Components/Profile';
-import EditProfile from './Components/editprofile';
-import Home from './Components/home'; // Assuming you have a Home component
-import { Route, Switch, Link, useLocation } from 'react-router-dom';
-import { UserContextProvider } from './UserContext';
-import Navbar from './Components/Navbar';
-
+import React, { useState, useCallback } from "react";
+import "./App.css";
+import Loginform from "./Components/Loginform";
+import Register from "./Components/Register";
+import ForgotPassword from "./Components/Forgotpassword";
+import Profile from "./Components/Profile";
+import EditProfile from "./Components/editprofile";
+import Home from "./Components/home"; // Assuming you have a Home component
+import { Route, Switch, Link, useLocation } from "react-router-dom";
+import { UserContextProvider } from "./UserContext";
+import Navbar from "./Components/Navbar";
+import ImageUpload from './ImageUpload';
 
 function App() {
   const location = useLocation();
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
 
   const setUsernameFromLoginForm = useCallback((enteredUsername) => {
     setUsername(enteredUsername);
@@ -22,18 +22,18 @@ function App() {
   return (
     <div>
       <UserContextProvider>
-        <Navbar username={username}/>
+        <Navbar username={username} />
         <Switch>
-          <Route exact path='/'>
+          <Route exact path="/">
             <Loginform setUsername={setUsernameFromLoginForm} />
           </Route>
-          <Route exact path='/forgotpassword'>
+          <Route exact path="/forgotpassword">
             <ForgotPassword />
           </Route>
-          <Route exact path='/register'>
+          <Route exact path="/register">
             <Register />
           </Route>
-          <Route exact path='/home'>
+          <Route exact path="/home">
             <Home />
           </Route>
           {/* <Route exact path='/seeprofile'>
@@ -46,11 +46,14 @@ function App() {
               See Profile
             </Link>
           </Route> */}
-          <Route exact path='/seeprofile/:username'>
+          <Route exact path="/seeprofile/:username">
             <Profile />
           </Route>
-          <Route exact path='/editprofile/:username'>
+          <Route exact path="/editprofile/:username">
             <EditProfile />
+          </Route>
+          <Route path="/image-upload/:username">
+            <ImageUpload />
           </Route>
         </Switch>
       </UserContextProvider>
