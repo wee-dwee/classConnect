@@ -30,7 +30,6 @@ function Home() {
         <h1>Name: {profile.name}</h1>
         <p>Email: {profile.email}</p>
         <p>Bio: {profile.bio}</p>
-        <p>Image: {profile.image}</p>
       </header>
       </div>
       

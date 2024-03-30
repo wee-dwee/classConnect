@@ -1,5 +1,5 @@
 import './Profile.css';
-import {Link, useLocation, useParams } from 'react-router-dom'; // Added useParams
+import { Link, useLocation, useParams } from 'react-router-dom'; // Added useParams
 import Navbar from './Navbar';
 import Footer1 from './Footer1';
 import React, { useState, useEffect } from 'react';
@@ -13,7 +13,7 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const location = useLocation();
   const { username } = useParams(); // Added to extract username from URL params
-  const image = ''
+
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
     axios.get(`http://localhost:3002/profiles/${username}`)
@@ -45,12 +45,21 @@ export default function Profile() {
               <p>Error: {error.message}</p>
             ) : (
               <>
-                <img 
-                  src={student}
-                  alt="No image" 
-                  onClick={handleImageClick} 
-                  className={isImageEnlarged ? "enlarged-image" : ""}
-                />
+                {profile.image ? (
+                  <img 
+                    src={profile.image}
+                    alt="Profile Image" 
+                    onClick={handleImageClick} 
+                    className={isImageEnlarged ? "enlarged-image" : ""}
+                  />
+                ) : (
+                  <img 
+                    src={student}
+                    alt="Default Student Image" 
+                    onClick={handleImageClick} 
+                    className={isImageEnlarged ? "enlarged-image" : ""}
+                  />
+                )}
                 <div className="profile-title">{profile.name}</div>
                 <div className="profile-email">{profile.email}</div>
                 <div className="profile-description">

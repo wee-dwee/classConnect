@@ -85,12 +85,11 @@ app.get('/profiles', async (req, res) => {
 // Get a specific profile by ID
 app.get('/profiles/:username', async (req, res) => {
   try {
-    console.log(req.params.username);
     const profile = await Profile.findOne({ email: req.params.username });
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
-    console.log(profile);
+    
     res.json(profile);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -181,33 +180,7 @@ app.get('/api/profile', async (req, res) => {
 });
 
 
-app.post('/upload_image/:username',async(req,res)=>{
-  try{
-      {
-        const username = req.params.username;
-        const file = req.body.file;
-        if (!file) {
-          return res.status(400).json({ error: 'No file part in the request' });
-        }
-        if (!['.jpg', '.jpeg', '.png'].includes(file.originalname.slice(-4).toLowerCase())) {
-          return res.status(400).json({ error: 'Unsupported file format. Only .jpg, .jpeg, .png are allowed.' });
-        }
-        const base64Data = fs.readFileSync(file.path, { encoding: 'base64'});
-        const result = await Profile.findOneAndUpdate(
-          { email: username },
-          { $set: { image: base64Data } }
-        )
-        if (!result.value) {
-          return res.status(404).json({ error: 'User not found' });
-        }
-        return res.status(200).json({ success: true, message: 'Image uploaded and user profile updated successfully' });
-        } 
-    }
-  catch(error)
-  {
-      res.status(500).json({error:error.message});
-  }
-})
+
 app.post('/api/update-password', async (req, res) => {
   const { username, newPassword } = req.body;
 
@@ -315,7 +288,26 @@ app.post('/api/verify-otp', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+app.post('/upload-image', async (req, res) => {
+  try {
+    const { username, image } = req.body;
 
+    // Find the profile by email (username) and update its image
+    const profile = await Profile.findOneAndUpdate(
+      { email: username },
+      { image: image },
+    );
+
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    return res.json({ message: 'Image updated successfully', profile });
+  } catch (error) {
+    console.error('Error updating image:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
