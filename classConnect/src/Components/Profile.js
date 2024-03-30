@@ -33,7 +33,7 @@ export default function Profile() {
 
   return (
     <>
-      <Navbar username={username}/>
+      {/* <Navbar /> */}
       <div className="create-box">
         <div className='upc'>
           <div className="gradient"></div>
