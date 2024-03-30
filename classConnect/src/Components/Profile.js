@@ -1,5 +1,5 @@
 import './Profile.css';
-import { useLocation, useParams } from 'react-router-dom'; // Added useParams
+import {Link, useLocation, useParams } from 'react-router-dom'; // Added useParams
 import Navbar from './Navbar';
 import Footer1 from './Footer1';
 import React, { useState, useEffect } from 'react';
@@ -55,6 +55,7 @@ export default function Profile() {
                 <div className="profile-description">
                   {profile.bio}
                 </div>
+                <Link to={`/editprofile/${username}`}>Edit Profile</Link> {/* Added Link */}
               </>
             )}
           </div>

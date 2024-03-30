@@ -278,6 +278,30 @@ app.post('/api/send-otp', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
+// Update profile by username
+app.put('/editprofile/:username', async (req, res) => {
+  try {
+    const { name, email, bio } = req.body;
+    const username = req.params.username;
+
+    // Find the user's profile by username
+    const profile = await Profile.findOneAndUpdate(
+      { email: username },
+      { name, email, bio },
+      { new: true } // Return the updated document
+    );
+
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    res.status(200).json({ message: 'Profile updated successfully', profile });
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 app.post('/api/verify-otp', async (req, res) => {
   const { otp, mailOTP } = req.body;
   try {

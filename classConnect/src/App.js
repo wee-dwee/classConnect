@@ -4,10 +4,12 @@ import Loginform from './Components/Loginform';
 import Register from './Components/Register';
 import ForgotPassword from './Components/Forgotpassword';
 import Profile from './Components/Profile';
+import EditProfile from './Components/editprofile';
 import Home from './Components/home'; // Assuming you have a Home component
 import { Route, Switch, Link, useLocation } from 'react-router-dom';
 import { UserContextProvider } from './UserContext';
 import Navbar from './Components/Navbar';
+
 
 function App() {
   const location = useLocation();
@@ -46,6 +48,9 @@ function App() {
           </Route> */}
           <Route exact path='/seeprofile/:username'>
             <Profile />
+          </Route>
+          <Route exact path='/editprofile/:username'>
+            <EditProfile />
           </Route>
         </Switch>
       </UserContextProvider>
