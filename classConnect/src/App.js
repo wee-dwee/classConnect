@@ -20,19 +20,19 @@ function App() {
   return (
     <div>
       <UserContextProvider>
-        <Navbar username={username}/>
+        {/* <Navbar username={username}/> */}
         <Switch>
           <Route exact path='/'>
             <Loginform setUsername={setUsernameFromLoginForm} />
           </Route>
           <Route exact path='/forgotpassword'>
-            <ForgotPassword />
+            <ForgotPassword username={username}/>
           </Route>
           <Route exact path='/register'>
             <Register />
           </Route>
           <Route exact path='/home'>
-            <Home />
+            <Home username={username}/>
           </Route>
           {/* <Route exact path='/seeprofile'>
             <Link
@@ -45,7 +45,7 @@ function App() {
             </Link>
           </Route> */}
           <Route exact path='/seeprofile/:username'>
-            <Profile />
+            <Profile username={username}/>
           </Route>
         </Switch>
       </UserContextProvider>
