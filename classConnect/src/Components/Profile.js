@@ -4,6 +4,7 @@ import Navbar from './Navbar';
 import Footer1 from './Footer1';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import student from './student.png';
 
 export default function Profile() {
   const [isImageEnlarged, setIsImageEnlarged] = useState(false);
@@ -33,7 +34,7 @@ export default function Profile() {
 
   return (
     <>
-      {/* <Navbar /> */}
+      <Navbar username={username}/>
       <div className="create-box">
         <div className='upc'>
           <div className="gradient"></div>
@@ -45,7 +46,7 @@ export default function Profile() {
             ) : (
               <>
                 <img 
-                  src="https://source.unsplash.com/random"
+                  src={student}
                   alt="No image" 
                   onClick={handleImageClick} 
                   className={isImageEnlarged ? "enlarged-image" : ""}
@@ -55,7 +56,7 @@ export default function Profile() {
                 <div className="profile-description">
                   {profile.bio}
                 </div>
-                <Link to={`/editprofile/${username}`}>Edit Profile</Link> {/* Added Link */}
+                {/* <Link to={`/editprofile/${username}`}>Edit Profile</Link> */}
               </>
             )}
           </div>

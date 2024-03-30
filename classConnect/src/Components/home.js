@@ -24,7 +24,7 @@ function Home() {
 
   return (
     <div className="App">
-      {/* <Navbar /> */}
+      <Navbar username={location.state.username}/>
       <div className="create-box">
       <header className="App-header">
         <h1>Name: {profile.name}</h1>

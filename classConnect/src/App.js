@@ -5,7 +5,7 @@ import Register from "./Components/Register";
 import ForgotPassword from "./Components/Forgotpassword";
 import Profile from "./Components/Profile";
 import EditProfile from "./Components/editprofile";
-import Home from "./Components/home"; // Assuming you have a Home component
+import Home from "./Components/home"; 
 import { Route, Switch, Link, useLocation } from "react-router-dom";
 import { UserContextProvider } from "./UserContext";
 import Navbar from "./Components/Navbar";
@@ -22,7 +22,7 @@ function App() {
   return (
     <div>
       <UserContextProvider>
-        <Navbar username={username} />
+        {/* <Navbar username={username} /> */}
         <Switch>
           <Route exact path="/">
             <Loginform setUsername={setUsernameFromLoginForm} />

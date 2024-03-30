@@ -14,6 +14,7 @@ import MenuItem from '@mui/material/MenuItem';
 import ClassIcon from '@mui/icons-material/Class';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory } from 'react-router-dom'; // Import useHistory
+import student from './student.png';
 
 const pages = ['Join a Class', 'About Us', 'Contact Us'];
 const settings = ['Profile', 'Edit Profile', 'Logout'];
@@ -44,6 +45,18 @@ function ResponsiveAppBar({username}) {
   const handleProfileClick = () => {
     // Redirect to the profile page
     history.push(`/seeprofile/${username}`);
+    handleCloseUserMenu(); // Close the menu after redirection
+  };
+
+  const handleEditProfile = () => {
+    // Redirect to the profile page
+    history.push(`/editprofile/${username}`);
+    handleCloseUserMenu(); // Close the menu after redirection
+  };
+
+  const handleLogout = () => {
+    // Redirect to the profile page
+    history.push("/");
     handleCloseUserMenu(); // Close the menu after redirection
   };
 
@@ -150,7 +163,7 @@ function ResponsiveAppBar({username}) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="https://source.unsplash.com/random"
+                <Avatar alt="Remy Sharp" src={student}
                   sx={{
                     width: 40,
                     height: 40,
@@ -181,7 +194,7 @@ function ResponsiveAppBar({username}) {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={setting === 'Profile' ? handleProfileClick : handleCloseUserMenu}>
+                <MenuItem key={setting} onClick={setting === 'Profile' ? handleProfileClick : setting==='Edit Profile' ? handleEditProfile:setting==='Logout' ? handleLogout:handleCloseUserMenu}>
                   <Typography textAlign="center">{setting}</Typography>
                 </MenuItem>
               ))}

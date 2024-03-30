@@ -3,9 +3,13 @@
   border-radius: 40px;
   padding-bottom: 20px;
   margin: auto;
-  margin-top: 80px;
+  margin-top: 100px;
   background: rgb(229, 224, 224);
   /* Adjusted min-height */
+}
+
+.create-box{
+  min-height: 80vh;
 }
 
 .gradient {

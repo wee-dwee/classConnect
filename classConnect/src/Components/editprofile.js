@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './editprofile.css'; // Import CSS for styling
+import Footer1 from './Footer1.js';
+import Navbar from './Navbar.js';
 
 export default function EditProfile() {
   const [name, setName] = useState('');
@@ -41,7 +43,7 @@ export default function EditProfile() {
       setIsUpdating(false); // Reset updating flag on successful update
       // Optionally, you can provide feedback to the user upon successful update
       alert('Profile updated successfully');
-      history.push(`/profile/${username}`);
+      history.push(`/seeprofile/${username}`);
     } catch (error) {
       console.error('Error updating profile:', error);
       setError(error);
@@ -50,29 +52,37 @@ export default function EditProfile() {
   };
 
   return (
+    <>
+    <Navbar username={username}/>
+    <div className="editprofile">
     <div className="edit-profile-container">
-      <h2>Edit Profile</h2>
+      <h2>Update Profile</h2>
       {isLoading ? (
         <p>Loading profile...</p>
       ) : error ? (
         <p>Error: {error.message}</p>
       ) : (
         <form onSubmit={handleSubmit}>
-          <label>
-            Name:
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-          </label>
-          <label>
-            Email:
+          <label className="emailfield">
+          <span className="highlighted">Email : </span> {/* Highlight email */}
             <span>{email}</span> {/* Render email as text */}
           </label>
           <label>
-            Bio:
+          <span className="highlighted">Name : </span> {/* Highlight name */}
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          </label>
+          
+          <label>
+          <span className="highlighted">Bio : </span> {/* Highlight bio */}
             <textarea value={bio} onChange={(e) => setBio(e.target.value)} />
           </label>
           <button type="submit" disabled={isUpdating}>{isUpdating ? 'Updating...' : 'Update Profile'}</button>
         </form>
       )}
     </div>
+    </div>
+    <Footer1 />
+    </>
+    
   );
 }
