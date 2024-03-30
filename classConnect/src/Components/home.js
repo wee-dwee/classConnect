@@ -4,14 +4,17 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import Footer from './Footer.js';
 import Navbar from './Navbar.js';
+import { useHistory } from 'react-router-dom';
 function Home() {
   const [profile, setProfile] = useState({});
   const location = useLocation();
+  const history = useHistory();
 
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
     axios.get(`http://localhost:3002/profiles/${location.state.username}`)
       .then(response => {
+        console.log(location.state.username);
         setProfile(response.data); // Assuming response.data is an object
       })
       .catch(error => {

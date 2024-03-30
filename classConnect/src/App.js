@@ -1,29 +1,52 @@
+import React, { useState, useCallback } from 'react';
 import './App.css';
 import Loginform from './Components/Loginform';
 import Register from './Components/Register';
 import ForgotPassword from './Components/Forgotpassword';
 import Profile from './Components/Profile';
-import {Route,Switch} from 'react-router-dom';
-import Home from './Components/home';
+import Home from './Components/home'; // Assuming you have a Home component
+import { Route, Switch, Link, useLocation } from 'react-router-dom';
+import { UserContextProvider } from './UserContext';
+
 function App() {
+  const location = useLocation();
+  const [username, setUsername] = useState('');
+
+  const setUsernameFromLoginForm = useCallback((enteredUsername) => {
+    setUsername(enteredUsername);
+  }, []);
+
   return (
     <div>
-        
+      <UserContextProvider>
         <Switch>
-            <Route exact path='/'><Loginform/></Route>
-            <Route exact path='/forgotpassword'>
-              <ForgotPassword />
-            </Route>
-            <Route exact path='/register'>
-              <Register />
-            </Route>
-            <Route exact path='/home'>
-              <Home />
-            </Route>
-            <Route exact path='/seeprofile'>
-              <Profile />
-            </Route>
+          <Route exact path='/'>
+            <Loginform setUsername={setUsernameFromLoginForm} />
+          </Route>
+          <Route exact path='/forgotpassword'>
+            <ForgotPassword />
+          </Route>
+          <Route exact path='/register'>
+            <Register />
+          </Route>
+          <Route exact path='/home'>
+            <Home />
+          </Route>
+          <Route exact path='/seeprofile'>
+            <Link
+              to={{
+                pathname:  `/seeprofile/${username}`,
+                state: { username: username }
+              }}
+            >
+              See Profile
+            </Link>
+          </Route>
+          <Route exact path='/seeprofile/:username'>
+            <Profile />
+          </Route>
         </Switch>
+      </UserContextProvider>
     </div>
   );
 }

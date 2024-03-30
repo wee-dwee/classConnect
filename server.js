@@ -9,11 +9,17 @@ require('dotenv').config();
 const uri = process.env.URI;
 const app = express();
 const multer  = require('multer');
-
+const cookieParser = require('cookie-parser');
 const PORT = process.env.PORT || 3002;
 
-app.use(cors());
+app.use(
+  cors({
+    origin:true,
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -79,11 +85,12 @@ app.get('/profiles', async (req, res) => {
 // Get a specific profile by ID
 app.get('/profiles/:username', async (req, res) => {
   try {
+    console.log(req.params.username);
     const profile = await Profile.findOne({ email: req.params.username });
     if (!profile) {
       return res.status(404).json({ error: 'Profile not found' });
     }
-
+    console.log(profile);
     res.json(profile);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -108,7 +115,7 @@ app.post('/api/register', async (req, res) => {
     await user.save();
 
     // Save profile
-    const newProfile = new Profile({ name, email: username });
+    const newProfile = new Profile({ name, email: username,bio:`Hi there i am using classconnect` });
     await newProfile.save();
 
     res.status(200).send('User registered successfully and profile created!');
@@ -122,27 +129,58 @@ app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username: username });
+    // Find user by username
+    const user = await User.findOne({ username });
 
-    if (!user) {
-      //console.log("User not found");
-      return res.status(401).send('Invalid credentials');
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      //console.log("invalid")
-      return res.status(401).send('Invalid credentials');
+    // If user doesn't exist or password doesn't match, return error
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = jwt.sign({ username }, 'secret-key', { expiresIn: '1h' });
-    //res.json({ token });
-    res.cookie('token', token, { httpOnly: true });
-    res.redirect('/');
+    // Find user profile
+    const profile = await Profile.findOne({ email: username });
+
+    // Generate JWT token
+    const token = jwt.sign({ userId: user._id, username }, 'secret-key', { expiresIn: '1h' });
+
+    // Set cookie with token
+    res.cookie('token', token, { httpOnly: true }).json({ user, profile });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+    console.error('Error logging in:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
+
+// Profile API
+app.get('/api/profile', async (req, res) => {
+  try {
+    // Check if token is present in cookies
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Verify token
+    const decoded = jwt.verify(token, 'secret-key');
+    const userId = decoded.username;
+
+    // Find user profile using userId
+    const profile = await Profile.findOne({ username: userId });
+
+    // If profile not found, return error
+    if (!profile) {
+      return res.status(404).json({ error: 'Profile not found' });
+    }
+
+    // Return profile data
+    res.json(profile);
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
 app.post('/upload_image/:username',async(req,res)=>{
   try{
       {
@@ -197,6 +235,7 @@ app.post('/api/update-password', async (req, res) => {
 app.get('/', (req, res) => {
   res.send('Welcome to the homepage!');
 });
+
 
 
 app.post('/api/send-otp', async (req, res) => {

@@ -6,9 +6,8 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-
-export default function Loginform() {
-  const [username, setUsername] = useState('');
+export default function Loginform({ setUsername }) {
+  const [usernameInput, setUsernameInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
@@ -21,14 +20,15 @@ export default function Loginform() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // Replace this URL with your login endpoint
       const response = await axios.post('http://localhost:3002/api/login', {
-        username,
+        username: usernameInput,
         password
       });
-      // Handle successful login, e.g., redirect to dashboard
       console.log('Login successful', response.data);
       window.alert('Login successfull.');
-      history.push('/home',{username:username});
+      history.push('/home', { username: usernameInput });
+      setUsername(usernameInput); // Update username in App component
     } catch (err) {
       setError('Invalid email or password. Please try again.');
       console.error('Login error:', err);
@@ -45,8 +45,8 @@ export default function Loginform() {
             <input
               type="email"
               placeholder='Enter Email'
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)}
               required
             />
             <FaEnvelope className='icon' />
