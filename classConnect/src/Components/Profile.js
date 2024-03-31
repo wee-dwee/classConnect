@@ -1,10 +1,10 @@
-import './Profile.css';
-import { Link, useLocation, useParams } from 'react-router-dom'; // Added useParams
-import Navbar from './Navbar';
-import Footer1 from './Footer1';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import student from './student.png';
+import "./Profile.css";
+import { Link, useLocation, useParams } from "react-router-dom"; // Added useParams
+import Navbar from "./Navbar";
+import Footer1 from "./Footer1";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import student from "./student.png";
 
 export default function Profile() {
   const [isImageEnlarged, setIsImageEnlarged] = useState(false);
@@ -16,13 +16,14 @@ export default function Profile() {
 
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
-    axios.get(`http://localhost:3002/profiles/${username}`)
-      .then(response => {
+    axios
+      .get(`http://localhost:3002/profiles/${username}`)
+      .then((response) => {
         setProfile(response.data);
         setIsLoading(false);
       })
-      .catch(error => {
-        console.error('Error fetching data:', error);
+      .catch((error) => {
+        console.error("Error fetching data:", error);
         setError(error);
         setIsLoading(false);
       });
@@ -34,9 +35,9 @@ export default function Profile() {
 
   return (
     <>
-      <Navbar username={username}/>
+      <Navbar username={username} />
       <div className="create-box">
-        <div className='upc'>
+        <div className="upc">
           <div className="gradient"></div>
           <div className="profile-down">
             {isLoading ? (
@@ -46,25 +47,24 @@ export default function Profile() {
             ) : (
               <>
                 {profile.image ? (
-                  <img 
-                    src={profile.image}
-                    alt="Profile Image" 
-                    onClick={handleImageClick} 
+                  <img
+                    src={`http://localhost:3002/uploads/${profile.image}`}
+                    alt="Profile Image"
+                    onClick={handleImageClick}
                     className={isImageEnlarged ? "enlarged-image" : ""}
                   />
                 ) : (
-                  <img 
+                  <img
                     src={student}
-                    alt="Default Student Image" 
-                    onClick={handleImageClick} 
+                    alt="Default Student Image"
+                    onClick={handleImageClick}
                     className={isImageEnlarged ? "enlarged-image" : ""}
                   />
                 )}
+
                 <div className="profile-title">{profile.name}</div>
                 <div className="profile-email">{profile.email}</div>
-                <div className="profile-description">
-                  {profile.bio}
-                </div>
+                <div className="profile-description">{profile.bio}</div>
                 {/* <Link to={`/editprofile/${username}`}>Edit Profile</Link> */}
               </>
             )}

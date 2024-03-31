@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const multer  = require('multer');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -8,8 +9,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const uri = process.env.URI;
 const app = express();
-const multer  = require('multer');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const PORT = process.env.PORT || 3002;
 
 app.use(
@@ -20,6 +21,7 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 mongoose.connect(uri, {
   useNewUrlParser: true,
@@ -54,7 +56,14 @@ const User = mongoose.model('User', userSchema);
 app.use(bodyParser.json());
 
 // Set up multer for handling file uploads
-const storage = multer.memoryStorage(); // You can adjust storage settings as needed
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+}); // You can adjust storage settings as needed
 const upload = multer({ storage: storage });
 
 // Create a new profile with an image
@@ -288,11 +297,11 @@ app.post('/api/verify-otp', async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-app.post('/upload-image', async (req, res) => {
+app.post('/upload-image/:username', upload.single('image'), async (req, res) => {
   try {
-    const { username, image } = req.body;
+    const username = req.params.username;
+    const image = req.file.filename;
 
-    // Find the profile by email (username) and update its image
     const profile = await Profile.findOneAndUpdate(
       { email: username },
       { image: image },
@@ -302,9 +311,9 @@ app.post('/upload-image', async (req, res) => {
       return res.status(404).json({ error: 'Profile not found' });
     }
 
-    return res.json({ message: 'Image updated successfully', profile });
+    return res.json({ message: 'Image uploaded successfully', profile });
   } catch (error) {
-    console.error('Error updating image:', error);
+    console.error('Error uploading image:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 });
