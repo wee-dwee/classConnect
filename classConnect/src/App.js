@@ -9,7 +9,7 @@ import Home from "./Components/home";
 import { Route, Switch, Link, useLocation } from "react-router-dom";
 import { UserContextProvider } from "./UserContext";
 import Navbar from "./Components/Navbar";
-import ImageUpload from './ImageUpload';
+
 
 function App() {
   const location = useLocation();
@@ -51,9 +51,6 @@ function App() {
           </Route>
           <Route exact path="/editprofile/:username">
             <EditProfile />
-          </Route>
-          <Route path="/image-upload/:username">
-            <ImageUpload />
           </Route>
         </Switch>
       </UserContextProvider>
