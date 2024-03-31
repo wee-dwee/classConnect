@@ -67,7 +67,7 @@ export default function EditProfile() {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      console.log("Image uploaded successfully");
+      alert("Image uploaded successfully");
       // Handle success, if needed
     } catch (error) {
       console.error("Error uploading image:", error);
