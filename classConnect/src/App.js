@@ -14,18 +14,22 @@ import CreateClassForm from "./Components/createclass";
 function App() {
   const location = useLocation();
   const [username, setUsername] = useState("");
+  const [profileId, setProfileId] = useState("");
 
   const setUsernameFromLoginForm = useCallback((enteredUsername) => {
     setUsername(enteredUsername);
   }, []);
-
+  const setProfileFromLoginForm = useCallback((enteredProfile) => {
+    setProfileId(enteredProfile);
+  }, []);
+  console.log(profileId)
   return (
     <div>
       <UserContextProvider>
-        {/* <Navbar username={username} /> */}
+        {/* <Navbar p={username} /> */}
         <Switch>
           <Route exact path="/">
-            <Loginform setUsername={setUsernameFromLoginForm} />
+            <Loginform setUsername={setUsernameFromLoginForm} setProfileId={setProfileFromLoginForm}/>
           </Route>
           <Route exact path="/forgotpassword">
             <ForgotPassword />
@@ -36,7 +40,7 @@ function App() {
           <Route exact path="/home">
             <Home />
           </Route>
-          <Route exact path="/createclass/:username">
+          <Route exact path="/createclass/:profileId">
             <CreateClassForm />
           </Route>
           {/* <Route exact path='/seeprofile'>
@@ -49,10 +53,10 @@ function App() {
               See Profile
             </Link>
           </Route> */}
-          <Route exact path="/seeprofile/:username">
+          <Route exact path="/seeprofile/:profileId">
             <Profile />
           </Route>
-          <Route exact path="/editprofile/:username">
+          <Route exact path="/editprofile/:profileId">
             <EditProfile />
           </Route>
         </Switch>

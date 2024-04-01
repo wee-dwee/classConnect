@@ -19,7 +19,7 @@ import student from './student.png';
 const pages = ['Join a Class', 'About Us', 'Contact Us'];
 const settings = ['Profile', 'Edit Profile', 'Logout'];
 
-function ResponsiveAppBar({ username }) {
+function ResponsiveAppBar({ username,profileId }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
@@ -30,13 +30,13 @@ function ResponsiveAppBar({ username }) {
 
   useEffect(() => {
     // Fetch user profile when component mounts
-    fetchUserProfile(username);
+    fetchUserProfile(profileId);
   }, [username]);
-
-  const fetchUserProfile = async (username) => {
+  console.log(profileId);
+  const fetchUserProfile = async (profileId) => {
     try {
       // Assuming you have an API endpoint to fetch user profile data
-      const response = await fetch(`http://localhost:3002/profiles/${username}`);
+      const response = await fetch(`http://localhost:3002/profiles/${profileId}`);
       const data = await response.json();
       setUserProfile(data); // Update userProfile state with fetched data
     } catch (error) {
@@ -60,12 +60,11 @@ function ResponsiveAppBar({ username }) {
   };
 
   const handleProfileClick = () => {
-    history.push(`/seeprofile/${username}`);
+    history.push(`/seeprofile/${profileId}`);
     handleCloseUserMenu();
   };
-
   const handleEditProfile = () => {
-    history.push(`/editprofile/${username}`);
+    history.push(`/editprofile/${profileId}`);
     handleCloseUserMenu();
   };
 

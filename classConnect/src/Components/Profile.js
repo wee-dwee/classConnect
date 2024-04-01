@@ -12,12 +12,12 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const location = useLocation();
-  const { username } = useParams(); // Added to extract username from URL params
+  const { profileId } = useParams(); // Added to extract username from URL params
 
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
     axios
-      .get(`http://localhost:3002/profiles/${username}`)
+      .get(`http://localhost:3002/profiles/${profileId}`)
       .then((response) => {
         setProfile(response.data);
         setIsLoading(false);
@@ -27,7 +27,7 @@ export default function Profile() {
         setError(error);
         setIsLoading(false);
       });
-  }, [username]); // Updated to use username from URL params
+  }, [profile.name]); // Updated to use username from URL params
 
   const handleImageClick = () => {
     setIsImageEnlarged(!isImageEnlarged);
@@ -35,7 +35,7 @@ export default function Profile() {
 
   return (
     <>
-      <Navbar username={username} />
+      <Navbar username={profile.name} profileId={profileId}/>
       <div className="create-box">
         <div className="upc">
           <div className="gradient"></div>

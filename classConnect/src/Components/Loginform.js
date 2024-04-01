@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
-export default function Loginform({ setUsername }) {
+export default function LoginForm({ setUsername, setProfileId }) {
   const [usernameInput, setUsernameInput] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -20,15 +20,27 @@ export default function Loginform({ setUsername }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Replace this URL with your login endpoint
       const response = await axios.post('http://localhost:3002/api/login', {
         username: usernameInput,
         password
       });
+
       console.log('Login successful', response.data);
-      window.alert('Login successfull.');
-      history.push('/home', { username: usernameInput });
-      setUsername(usernameInput); // Update username in App component
+
+      const { user, profileId } = response.data;
+
+      if (!profileId) {
+        throw new Error('Profile ID not found in response');
+      }
+
+      window.alert('Login successful.');
+
+      // Update username and profile ID in App component state
+
+      setUsername(user.username); // Assuming user object contains username
+      setProfileId(profileId);
+
+      history.push('/home', { profileId: profileId });
     } catch (err) {
       setError('Invalid email or password. Please try again.');
       console.error('Login error:', err);

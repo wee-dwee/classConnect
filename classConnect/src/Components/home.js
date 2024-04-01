@@ -12,19 +12,19 @@ function Home() {
 
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
-    axios.get(`http://localhost:3002/profiles/${location.state.username}`)
+    axios.get(`http://localhost:3002/profiles/${location.state.profileId}`)
       .then(response => {
-        console.log(location.state.username);
+        console.log(location.state.profileId);
         setProfile(response.data); // Assuming response.data is an object
       })
       .catch(error => {
         console.error('Error fetching data:', error);
       });
-  }, [location.state.username]);
+  }, [profile.name]);
 
   return (
     <div className="App">
-      <Navbar username={location.state.username}/>
+      <Navbar username={profile.email} profileId={location.state.profileId} />
       <div className="create-box">
         <header className="App-header">
           <h1>Name: {profile.name}</h1>

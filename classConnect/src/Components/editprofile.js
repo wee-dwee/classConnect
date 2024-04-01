@@ -13,12 +13,12 @@ export default function EditProfile() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false); // Track whether profile update is in progress
-  const { username } = useParams();
+  const { profileId } = useParams();
   const history = useHistory();
   const [image, setImage] = useState("");
   useEffect(() => {
     axios
-      .get(`http://localhost:3002/profiles/${username}`)
+      .get(`http://localhost:3002/profiles/${profileId}`)
       .then((response) => {
         const { name, email, bio } = response.data;
         setName(name);
@@ -31,13 +31,13 @@ export default function EditProfile() {
         setError(error);
         setIsLoading(false);
       });
-  }, [username]);
+  }, [name]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsUpdating(true); // Set updating flag to true while request is in progress
     try {
-      await axios.put(`http://localhost:3002/editprofile/${username}`, {
+      await axios.put(`http://localhost:3002/editprofile/${profileId}`, {
         name,
         email, // Include email in the request body for updating if needed
         bio,
@@ -45,7 +45,7 @@ export default function EditProfile() {
       setIsUpdating(false); // Reset updating flag on successful update
       // Optionally, you can provide feedback to the user upon successful update
       alert("Profile updated successfully");
-      history.push(`/seeprofile/${username}`);
+      history.push(`/seeprofile/${profileId}`);
     } catch (error) {
       console.error("Error updating profile:", error);
       setError(error);
@@ -61,7 +61,7 @@ export default function EditProfile() {
 
     try {
       await axios.post(
-        `http://localhost:3002/upload-image/${username}`,
+        `http://localhost:3002/upload-image/${email}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -76,7 +76,7 @@ export default function EditProfile() {
   };
   return (
     <>
-      <Navbar username={username} />
+      <Navbar username={email} profileId={profileId} />
       <div className="editprofile">
         <div className="edit-profile-container">
           <h2>Update Profile</h2>

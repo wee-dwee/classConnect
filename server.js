@@ -97,9 +97,9 @@ app.get("/profiles", async (req, res) => {
 });
 
 // Get a specific profile by ID
-app.get("/profiles/:username", async (req, res) => {
+app.get("/profiles/:profileId", async (req, res) => {
   try {
-    const profile = await Profile.findOne({ email: req.params.username });
+    const profile = await Profile.findOne({ _id: req.params.profileId });
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });
     }
@@ -109,12 +109,13 @@ app.get("/profiles/:username", async (req, res) => {
   }
 });
 
-app.get("/classes/:username", async (req, res) => {
+app.get("/classes/:profileid", async (req, res) => {
   try {
-    const { username } = req.params;
+    const { profileid } = req.params;
 
     // Assuming you want to find classes owned by a specific user
-    const classes = await Class.find({ OwnerUser: username });
+    const profile_ins=await Profile.find({_id:profileid});
+    const classes = await Class.find({ OwnerUser: profile_ins.email });
 
     res.json(classes);
   } catch (error) {
@@ -126,8 +127,9 @@ app.get("/classes/:username", async (req, res) => {
 app.post("/classes", async (req, res) => {
   try {
     // Extract class details from the request body
-    const { name, OwnerUser, bio, classcode } = req.body;
-
+    const { name, OwnerUserID, bio, classcode } = req.body;
+    const profile_ins=await Profile.findOne({_id:OwnerUserID});
+    const OwnerUser=profile_ins.email;
     // Check if the classcode is unique
     const existingClass = await Class.findOne({ classcode });
     if (existingClass) {
@@ -209,6 +211,8 @@ app.post("/api/login", async (req, res) => {
 
     // Find user profile
     const profile = await Profile.findOne({ email: username });
+    const profileId = profile._id; // Get profile ID
+    console.log(profileId);
 
     // Generate JWT token
     const token = jwt.sign({ userId: user._id, username }, "secret-key", {
@@ -216,7 +220,10 @@ app.post("/api/login", async (req, res) => {
     });
 
     // Set cookie with token
-    res.cookie("token", token, { httpOnly: true }).json({ user, profile });
+    res.cookie("token", token, { httpOnly: true });
+
+    // Return user data and profile ID
+    res.status(200).json({ user, profileId, username: profile.email });
   } catch (error) {
     console.error("Error logging in:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -323,14 +330,14 @@ app.post("/api/send-otp", async (req, res) => {
   }
 });
 // Update profile by username
-app.put("/editprofile/:username", async (req, res) => {
+app.put("/editprofile/:profileId", async (req, res) => {
   try {
     const { name, email, bio } = req.body;
-    const username = req.params.username;
-
+    const profileId = req.params.profileId;
+    console.log(profileId);
     // Find the user's profile by username
     const profile = await Profile.findOneAndUpdate(
-      { email: username },
+      { _id: profileId },
       { name, email, bio },
       { new: true } // Return the updated document
     );

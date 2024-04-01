@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from "react-router-dom"; // Added useParams
 
 function CreateClassForm() {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [classCode, setClassCode] = useState('');
   const [message, setMessage] = useState('');
-  const { username } = useParams();
+  const location = useLocation();
+  const { profileId } = useParams();
+  console.log(profileId);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -15,7 +17,7 @@ function CreateClassForm() {
       // Make a POST request to create a new class
       const response = await axios.post('http://localhost:3002/classes', {
         name,
-        OwnerUser: username,
+        OwnerUserID: profileId,
         bio,
         classcode: classCode
       });
