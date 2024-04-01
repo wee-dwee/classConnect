@@ -7,87 +7,32 @@
   font-family: "Poppins", sans-serif;
 }
 
+body {
+  position: relative;
+  margin: 0;
+  padding-bottom: 50px; /* Height of the footer */
+  min-height: 100vh;
+}
+
 .foo {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100vw;
+  width: 100%;
   background: #3586ff;
-  min-height: 20px;
-  padding: 5px 5px;
-  padding-top: 0px;
+  padding: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
-
 
 .footer p {
   color: #fff;
-  margin: 15px 0 10px 0;
+  margin: 10px 0;
   font-size: 1.2rem;
   font-weight: 400;
   text-align: center;
-}
-
-.wave {
-  position: absolute;
-  top: -70px;
-  left: 0;
-  width: 100vw;
-  height: 70px;
-  background: url("https://i.ibb.co/wQZVxxk/wave.png");
-  background-size: 1000px 100px;
-}
-
-.wave#wave1 {
-  z-index: 1000;
-  opacity: 1;
-  bottom: 0;
-  animation: animateWaves 4s linear infinite;
-}
-
-.wave#wave2 {
-  z-index: 999;
-  opacity: 0.5;
-  bottom: 10px;
-  animation: animate 4s linear infinite !important;
-}
-
-.wave#wave3 {
-  z-index: 1000;
-  opacity: 0.2;
-  bottom: 15px;
-  animation: animateWaves 3s linear infinite;
-}
-
-.wave#wave4 {
-  z-index: 999;
-  opacity: 0.7;
-  bottom: 20px;
-  animation: animate 3s linear infinite;
-}
-
-@keyframes animateWaves {
-  0% {
-    background-position-x: 1000px;
-  }
-  100% {
-    background-positon-x: 0px;
-  }
-}
-
-@keyframes animate {
-  0% {
-    background-position-x: -1000px;
-  }
-  100% {
-    background-positon-x: 0px;
-  }
 }

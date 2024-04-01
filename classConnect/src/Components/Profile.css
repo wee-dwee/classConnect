@@ -8,10 +8,6 @@
   /* Adjusted min-height */
 }
 
-.create-box{
-  min-height: 80vh;
-}
-
 .gradient {
   background-image: linear-gradient(#91baff, #205fff);
   height: 125px;
@@ -78,7 +74,6 @@
 }
 
 .create-box {
-  height: 95vh;
   margin: auto;
 }
 
