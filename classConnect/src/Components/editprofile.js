@@ -109,16 +109,21 @@ export default function EditProfile() {
                   onChange={(e) => setBio(e.target.value)}
                 />
               </label>
-              <div className="auth-wrapper">
+              <label>
+                <span className="highlighted">Profile Photo : </span>{" "}
+                <div className="auth-wrapper">
                 <div className="auth-inner" style={{ width: "auto" }}>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={onInputChange}
+                    className="inputimage"
                   />
-                  <button type="button" onClick={uploadImage} >Upload Image</button>
+                  <button type="button" onClick={uploadImage} className="uploadimage">Upload Image</button>
                 </div>
               </div>
+              </label>
+              
               <button type="submit" disabled={isUpdating}>
                 {isUpdating ? "Updating..." : "Update Profile"}
               </button>
