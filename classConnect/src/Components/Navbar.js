@@ -14,15 +14,19 @@ import MenuItem from '@mui/material/MenuItem';
 import ClassIcon from '@mui/icons-material/Class';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import student from './student.png';
+import teacher from './teacher.png';
 
 const pages = ['Join a Class', 'About Us', 'Contact Us'];
+const pagesins = ['Create a Class', 'About Us', 'Contact Us'];
 const settings = ['Profile', 'Edit Profile', 'Logout'];
 
 function ResponsiveAppBar({ username,profileId }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const [checkin,setcheckin]=useState(false); // Initialize checkin state to false
   const isMediumScreen = useMediaQuery('(max-width: 2100px)');
   const isSmallScreen = useMediaQuery('(max-width: 1700px)');
   const isExtraSmallScreen = useMediaQuery('(max-width: 1500px)');
@@ -34,12 +38,13 @@ function ResponsiveAppBar({ username,profileId }) {
     // Fetch user profile when component mounts
     fetchUserProfile(profileId);
   }, [username]);
-  console.log(profileId);
+
   const fetchUserProfile = async (profileId) => {
     try {
       // Assuming you have an API endpoint to fetch user profile data
       const response = await fetch(`http://localhost:3002/profiles/${profileId}`);
       const data = await response.json();
+      setcheckin(data.isInstructor); // Update checkin state with fetched data
       setUserProfile(data); // Update userProfile state with fetched data
     } catch (error) {
       console.error('Error fetching user profile:', error);
@@ -49,6 +54,7 @@ function ResponsiveAppBar({ username,profileId }) {
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -65,6 +71,7 @@ function ResponsiveAppBar({ username,profileId }) {
     history.push(`/seeprofile/${profileId}`);
     handleCloseUserMenu();
   };
+
   const handleEditProfile = () => {
     history.push(`/editprofile/${profileId}`);
     handleCloseUserMenu();
@@ -83,7 +90,8 @@ function ResponsiveAppBar({ username,profileId }) {
           <Typography
             variant="h6"
             noWrap
-            component="a"
+            component={Link}
+            to="/"
             sx={{
               mr: isExtraexexSmallScreen ? '14%' : isExtraexSmallScreen? '18%' : isExtraSmallScreen ? '25%' : isSmallScreen ? '28%' : isMediumScreen ? '32%' : '37%',
               display: { xs: 'none', md: 'flex' },
@@ -127,7 +135,7 @@ function ResponsiveAppBar({ username,profileId }) {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
+              {(checkin ? pagesins : pages).map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
                   <Typography textAlign="center" sx={{ fontFamily: 'Arial, sans-serif' }}>{page}</Typography>
                 </MenuItem>
@@ -138,7 +146,8 @@ function ResponsiveAppBar({ username,profileId }) {
           <Typography
             variant="h5"
             noWrap
-            component="a"
+            component={Link}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -155,7 +164,7 @@ function ResponsiveAppBar({ username,profileId }) {
 
           {/* Pages */}
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, mx:'auto' }}>
-            {pages.map((page) => (
+            {(checkin ? pagesins : pages).map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -179,7 +188,7 @@ function ResponsiveAppBar({ username,profileId }) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              {userProfile && userProfile.image ? (
+                {userProfile && userProfile.image ? (
                   <Avatar
                     alt="User Avatar"
                     src={`http://localhost:3002/uploads/${userProfile.image}`}
@@ -196,7 +205,7 @@ function ResponsiveAppBar({ username,profileId }) {
                 ) : (
                   <Avatar
                     alt="User Avatar"
-                    src={student}
+                    src={checkin ? teacher : student} // Use teacher.png if checkin is true, otherwise use student.png
                     sx={{
                       width: 40,
                       height: 40,

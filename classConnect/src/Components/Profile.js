@@ -5,6 +5,7 @@ import Footer1 from "./Footer1";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import student from "./student.png";
+import teacher from './teacher.png';
 
 export default function Profile() {
   const [isImageEnlarged, setIsImageEnlarged] = useState(false);
@@ -13,6 +14,7 @@ export default function Profile() {
   const [error, setError] = useState(null);
   const location = useLocation();
   const { profileId } = useParams(); // Added to extract username from URL params
+  const [checkin,setcheckin]=useState(false); // Initialize checkin state to false
 
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
@@ -20,6 +22,7 @@ export default function Profile() {
       .get(`http://localhost:3002/profiles/${profileId}`)
       .then((response) => {
         setProfile(response.data);
+        setcheckin(response.data.isInstructor);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -32,7 +35,6 @@ export default function Profile() {
   const handleImageClick = () => {
     setIsImageEnlarged(!isImageEnlarged);
   };
-
   return (
     <>
       <Navbar username={profile.name} profileId={profileId}/>
@@ -55,7 +57,7 @@ export default function Profile() {
                   />
                 ) : (
                   <img
-                    src={student}
+                    src={checkin ? teacher : student} 
                     alt="Default Student Image"
                     onClick={handleImageClick}
                     className={isImageEnlarged ? "enlarged-image" : ""}
