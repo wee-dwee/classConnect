@@ -120,6 +120,7 @@ export default function EditProfile() {
                     className="inputimage"
                   />
                   <button type="button" onClick={uploadImage} className="uploadimage">Upload Image</button>
+                  <button type="button" onClick={uploadImage} className="uploadimage">Remove Image</button>
                 </div>
               </div>
               </label>

@@ -82,6 +82,16 @@ function ResponsiveAppBar({ username,profileId }) {
     handleCloseUserMenu();
   };
 
+  const handleAboutUs = () => {
+    history.push("/aboutus");
+    handleCloseUserMenu();
+  };
+
+  const handleContactUs = () => {
+    history.push("/contactus");
+    handleCloseUserMenu();
+  };
+
   return (
     <AppBar position="static">
       <Container maxWidth="false">
@@ -136,7 +146,7 @@ function ResponsiveAppBar({ username,profileId }) {
               }}
             >
               {(checkin ? pagesins : pages).map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
+                <MenuItem key={page} onClick={page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
                   <Typography textAlign="center" sx={{ fontFamily: 'Arial, sans-serif' }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -167,7 +177,7 @@ function ResponsiveAppBar({ username,profileId }) {
             {(checkin ? pagesins : pages).map((page) => (
               <Button
                 key={page}
-                onClick={handleCloseNavMenu}
+                onClick={page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu}
                 sx={{
                   my: 2,
                   color: 'white',

@@ -5,6 +5,8 @@ import Register from "./Components/Register";
 import ForgotPassword from "./Components/Forgotpassword";
 import Profile from "./Components/Profile";
 import EditProfile from "./Components/editprofile";
+import AboutUs from "./Components/AboutUs.js";
+import ContactUs from "./Components/ContactUs.js";
 import Home from "./Components/home"; 
 import { Route, Switch, Link, useLocation } from "react-router-dom";
 import { UserContextProvider } from "./UserContext";
@@ -58,6 +60,12 @@ function App() {
           </Route>
           <Route exact path="/editprofile/:profileId">
             <EditProfile />
+          </Route>
+          <Route exact path="/aboutus">
+            <AboutUs />
+          </Route>
+          <Route exact path="/contactus">
+            <ContactUs />
           </Route>
         </Switch>
       </UserContextProvider>
