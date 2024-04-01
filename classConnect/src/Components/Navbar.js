@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,19 +13,36 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ClassIcon from '@mui/icons-material/Class';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useHistory } from 'react-router-dom'; // Import useHistory
+import { useHistory } from 'react-router-dom';
 import student from './student.png';
 
 const pages = ['Join a Class', 'About Us', 'Contact Us'];
 const settings = ['Profile', 'Edit Profile', 'Logout'];
 
-function ResponsiveAppBar({username}) {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+function ResponsiveAppBar({ username }) {
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const isMediumScreen = useMediaQuery('(max-width: 1400px)');
   const isSmallScreen = useMediaQuery('(max-width: 1100px)');
   const isExtraSmallScreen = useMediaQuery('(max-width: 970px)');
-  const history = useHistory(); // Initialize useHistory
+  const history = useHistory();
+
+  useEffect(() => {
+    // Fetch user profile when component mounts
+    fetchUserProfile(username);
+  }, [username]);
+
+  const fetchUserProfile = async (username) => {
+    try {
+      // Assuming you have an API endpoint to fetch user profile data
+      const response = await fetch(`http://localhost:3002/profiles/${username}`);
+      const data = await response.json();
+      setUserProfile(data); // Update userProfile state with fetched data
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -43,21 +60,18 @@ function ResponsiveAppBar({username}) {
   };
 
   const handleProfileClick = () => {
-    // Redirect to the profile page
     history.push(`/seeprofile/${username}`);
-    handleCloseUserMenu(); // Close the menu after redirection
+    handleCloseUserMenu();
   };
 
   const handleEditProfile = () => {
-    // Redirect to the profile page
     history.push(`/editprofile/${username}`);
-    handleCloseUserMenu(); // Close the menu after redirection
+    handleCloseUserMenu();
   };
 
   const handleLogout = () => {
-    // Redirect to the profile page
     history.push("/");
-    handleCloseUserMenu(); // Close the menu after redirection
+    handleCloseUserMenu();
   };
 
   return (
@@ -163,17 +177,35 @@ function ResponsiveAppBar({username}) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src={student}
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    transition: 'all 0.3s ease-in-out', // Add transition for smooth animation
-                    '&:hover': {
-                      width: 60, // Enlarge width on hover
-                      height: 60, // Enlarge height on hover
-                    },
-                  }}
-                />
+              {userProfile && userProfile.image ? (
+                  <Avatar
+                    alt="User Avatar"
+                    src={`http://localhost:3002/uploads/${userProfile.image}`}
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        width: 60,
+                        height: 60,
+                      },
+                    }}
+                  />
+                ) : (
+                  <Avatar
+                    alt="User Avatar"
+                    src={student}
+                    sx={{
+                      width: 40,
+                      height: 40,
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        width: 60,
+                        height: 60,
+                      },
+                    }}
+                  />
+                )}
               </IconButton>
             </Tooltip>
             {/* User Menu */}
