@@ -9,7 +9,7 @@ import Home from "./Components/home";
 import { Route, Switch, Link, useLocation } from "react-router-dom";
 import { UserContextProvider } from "./UserContext";
 import Navbar from "./Components/Navbar";
-
+import CreateClassForm from "./Components/createclass";
 
 function App() {
   const location = useLocation();
@@ -35,6 +35,9 @@ function App() {
           </Route>
           <Route exact path="/home">
             <Home />
+          </Route>
+          <Route exact path="/createclass/:username">
+            <CreateClassForm />
           </Route>
           {/* <Route exact path='/seeprofile'>
             <Link

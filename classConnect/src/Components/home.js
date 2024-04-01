@@ -1,10 +1,10 @@
-// src/Home.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import Footer from './Footer.js';
 import Navbar from './Navbar.js';
 import { useHistory } from 'react-router-dom';
+
 function Home() {
   const [profile, setProfile] = useState({});
   const location = useLocation();
@@ -26,16 +26,15 @@ function Home() {
     <div className="App">
       <Navbar username={location.state.username}/>
       <div className="create-box">
-      <header className="App-header">
-        <h1>Name: {profile.name}</h1>
-        <p>Email: {profile.email}</p>
-        <p>Bio: {profile.bio}</p>
-      </header>
+        <header className="App-header">
+          <h1>Name: {profile.name}</h1>
+          <p>Email: {profile.email}</p>
+          <p>Bio: {profile.bio}</p>
+          {profile.isInstructor ? <p>IsInstructor: Yes</p> : null}
+        </header>
       </div>
-      
       <Footer/>
     </div>
-    
   );
 }
 
