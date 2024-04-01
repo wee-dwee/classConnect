@@ -23,9 +23,11 @@ function ResponsiveAppBar({ username,profileId }) {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
-  const isMediumScreen = useMediaQuery('(max-width: 1400px)');
-  const isSmallScreen = useMediaQuery('(max-width: 1100px)');
-  const isExtraSmallScreen = useMediaQuery('(max-width: 970px)');
+  const isMediumScreen = useMediaQuery('(max-width: 2100px)');
+  const isSmallScreen = useMediaQuery('(max-width: 1700px)');
+  const isExtraSmallScreen = useMediaQuery('(max-width: 1500px)');
+  const isExtraexSmallScreen = useMediaQuery('(max-width: 1250px)');
+  const isExtraexexSmallScreen = useMediaQuery('(max-width: 1000px)');
   const history = useHistory();
 
   useEffect(() => {
@@ -83,7 +85,7 @@ function ResponsiveAppBar({ username,profileId }) {
             noWrap
             component="a"
             sx={{
-              mr: isExtraSmallScreen ? 15 : isSmallScreen ? 20 : isMediumScreen ? 35 : 60,
+              mr: isExtraexexSmallScreen ? '14%' : isExtraexSmallScreen? '18%' : isExtraSmallScreen ? '25%' : isSmallScreen ? '28%' : isMediumScreen ? '32%' : '37%',
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
@@ -150,8 +152,9 @@ function ResponsiveAppBar({ username,profileId }) {
           >
             ClassConnect
           </Typography>
+
           {/* Pages */}
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, mx:'auto' }}>
             {pages.map((page) => (
               <Button
                 key={page}
