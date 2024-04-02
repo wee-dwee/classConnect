@@ -5,7 +5,7 @@
     border-radius: 10px;
     animation: fadeIn 1s ease-in; /* Fade in animation */
     width: 400px; /* Set a fixed width */
-    margin: 50px auto 0; /* Center align horizontally and add space at the top */
+    margin: 150px auto 0; /* Center align horizontally and add space at the top */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -43,4 +43,29 @@
   .success-message {
     color: green; /* Set success message color */
   }
+
+  .joinclassbtn {
+    width: 100%; 
+    height: 40px; 
+    padding: 10px; 
+    background-color: #007bff; 
+    color: #fff; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+  }
+
+  .formhead{
+    margin-bottom: 10px;
+  }
+
+  .headings{
+    font-weight: 550;
+  }
   
+  @media(max-width: 400px)
+  {
+    .join-class-container{
+      width: 85vw;
+    }
+  }

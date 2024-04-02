@@ -60,6 +60,11 @@ function ResponsiveAppBar({ username,profileId }) {
     handleCloseUserMenu();
   }
 
+  const handleJoinClass = () =>{
+    history.push(`/join-class/${profileId}`);
+    handleCloseUserMenu();
+  }
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -151,7 +156,7 @@ function ResponsiveAppBar({ username,profileId }) {
               }}
             >
               {(checkin ? pagesins : pages).map((page) => (
-                <MenuItem key={page} onClick={page==="Create a Class" ? handleCreateClass : page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
+                <MenuItem key={page} onClick={page==="Join a Class" ? handleJoinClass :page==="Create a Class" ? handleCreateClass : page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
                   <Typography textAlign="center" sx={{ fontFamily: 'Arial, sans-serif' }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -182,7 +187,7 @@ function ResponsiveAppBar({ username,profileId }) {
             {(checkin ? pagesins : pages).map((page) => (
               <Button
                 key={page}
-                onClick={page==="Create a Class" ? handleCreateClass : page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu}
+                onClick={page==="Join a Class" ? handleJoinClass : page==="Create a Class" ? handleCreateClass : page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu}
                 sx={{
                   my: 2,
                   color: 'white',

@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from "react-router-dom"; // Removed unnecessary import
-import './JoinClassPage.css'
+import './JoinClassPage.css';
+import Footer from './Footer';
+import Navbar from './Navbar';
 
-const JoinClassPage = () => {
+const JoinClassPage = ({username}) => {
   const [classcode, setClasscode] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -26,16 +28,21 @@ const JoinClassPage = () => {
   };
 
   return (
-    <div className="join-class-container">
-      <h2>Join Class</h2>
+    <>
+    <Navbar username={username} profileId={profileId} />
+      <div className="join-class-container">
+      <h2 className="formhead">Join Class</h2>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
       <div>
-        <label>Class Code:</label>
+        <label className="headings">Enter Class Code:</label>
         <input type="text" value={classcode} onChange={(e) => setClasscode(e.target.value)} />
       </div>
-      <button onClick={handleJoinClass}>Join Class</button>
+      <button onClick={handleJoinClass} className="joinclassbtn">Join Class</button>
     </div>
+    <Footer />
+    </>
+    
   );
 };
 

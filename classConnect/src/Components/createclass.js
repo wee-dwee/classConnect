@@ -41,7 +41,7 @@ function CreateClassForm({username}) {
     <>
     <Navbar username={username} profileId={profileId}/>
       <div className="create-class-form-container"> {/* Added className for styling */}
-      <h2>Create Class</h2>
+      <h2 className="formhead">Create Class</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label className="headings">Class Name:</label>
