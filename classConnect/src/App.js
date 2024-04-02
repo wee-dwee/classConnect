@@ -45,18 +45,8 @@ function App() {
             <Home />
           </Route>
           <Route exact path="/createclass/:profileId">
-            <CreateClassForm />
+            <CreateClassForm username={username} profileId={profileId}/>
           </Route>
-          {/* <Route exact path='/seeprofile'>
-            <Link
-              to={{
-                pathname:  `/seeprofile/${username}`,
-                state: { username: username }
-              }}
-            >
-              See Profile
-            </Link>
-          </Route> */}
           <Route exact path="/seeprofile/:profileId">
             <Profile />
           </Route>
@@ -64,7 +54,7 @@ function App() {
             <EditProfile />
           </Route>
           <Route exact path="/join-class/:profileId">
-            <JoinClassPage />
+            <JoinClassPage username={username} profileId={profileId}/>
           </Route>
           <Route exact path="/aboutus">
             <AboutUs />

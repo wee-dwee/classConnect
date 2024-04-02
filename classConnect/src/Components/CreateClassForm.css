@@ -8,6 +8,14 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 20px;
+  }
+
+  @media(max-width: 400px)
+  {
+    .create-class-form-container{
+      width: 85vw;
+    }
   }
   
   @keyframes fadeIn {
@@ -40,3 +48,43 @@
     width: 100%; /* Ensure the button takes full width */
   }
   
+  /* CreateClassForm.css */
+
+/* Add styles for input elements */
+input[type="text"],
+textarea {
+  width: 100%; /* Set width to 100% to extend across the container */
+  height: 40px; /* Set desired height for input elements */
+  padding: 8px; /* Add padding for better visual appearance */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+  border: 1px solid #ccc; /* Add border for better visibility */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  margin-bottom: 10px; /* Add margin at the bottom for spacing between elements */
+}
+
+/* Add styles for the submit button */
+.createclassbtn {
+  width: 100%; /* Set width to 100% to extend across the container */
+  height: 40px; /* Set desired height for the button */
+  padding: 10px; /* Add padding for better visual appearance */
+  background-color: #007bff; /* Set background color for the button */
+  color: #fff; /* Set text color for the button */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+/* Add styles for headings */
+.headings {
+  font-weight: 500; /* Set font-weight to bold for headings */
+}
+
+.bio-textarea {
+  width: 100%; /* Set width to 100% to extend across the container */
+  height: 150px; /* Set desired height for the textarea */
+  padding: 8px; /* Add padding for better visual appearance */
+  border-radius: 5px; /* Add border-radius for rounded corners */
+  border: 1px solid #ccc; /* Add border for better visibility */
+  box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  margin-bottom: 10px; /* Add margin at the bottom for spacing between elements */
+}

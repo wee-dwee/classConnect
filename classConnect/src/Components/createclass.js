@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useLocation, useParams } from "react-router-dom"; // Added useParams
 import './CreateClassForm.css'; // Import CSS file for styling
+import Navbar from './Navbar';
+import Footer from './Footer';
 
-function CreateClassForm() {
+function CreateClassForm({username}) {
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
   const [classCode, setClassCode] = useState('');
@@ -36,25 +38,30 @@ function CreateClassForm() {
   };
 
   return (
-    <div className="create-class-form-container"> {/* Added className for styling */}
+    <>
+    <Navbar username={username} profileId={profileId}/>
+      <div className="create-class-form-container"> {/* Added className for styling */}
       <h2>Create Class</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Class Name:</label>
+          <label className="headings">Class Name:</label>
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
         </div>
         <div>
-          <label>Bio:</label>
-          <textarea value={bio} onChange={(e) => setBio(e.target.value)} required />
+          <label className="headings">Bio:</label>
+          <textarea value={bio} onChange={(e) => setBio(e.target.value)} required className="bio-textarea"/>
         </div>
         <div>
-          <label>Class Code:</label>
+          <label className="headings">Class Code:</label>
           <input type="text" value={classCode} onChange={(e) => setClassCode(e.target.value)} required />
         </div>
-        <button type="submit">Create Class</button>
+        <button type="submit" className="createclassbtn">Create Class</button>
       </form>
       {message && <p>{message}</p>}
     </div>
+    <Footer />
+    </>
+    
   );
 }
 

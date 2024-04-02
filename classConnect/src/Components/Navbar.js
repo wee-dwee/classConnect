@@ -55,6 +55,11 @@ function ResponsiveAppBar({ username,profileId }) {
     setAnchorElNav(event.currentTarget);
   };
 
+  const handleCreateClass = () =>{
+    history.push(`/createclass/${profileId}`);
+    handleCloseUserMenu();
+  }
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -146,7 +151,7 @@ function ResponsiveAppBar({ username,profileId }) {
               }}
             >
               {(checkin ? pagesins : pages).map((page) => (
-                <MenuItem key={page} onClick={page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
+                <MenuItem key={page} onClick={page==="Create a Class" ? handleCreateClass : page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu} sx={{ marginLeft: 'auto' }}>
                   <Typography textAlign="center" sx={{ fontFamily: 'Arial, sans-serif' }}>{page}</Typography>
                 </MenuItem>
               ))}
@@ -177,7 +182,7 @@ function ResponsiveAppBar({ username,profileId }) {
             {(checkin ? pagesins : pages).map((page) => (
               <Button
                 key={page}
-                onClick={page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu}
+                onClick={page==="Create a Class" ? handleCreateClass : page==="About Us" ? handleAboutUs : page==="Contact Us" ? handleContactUs : handleCloseNavMenu}
                 sx={{
                   my: 2,
                   color: 'white',
