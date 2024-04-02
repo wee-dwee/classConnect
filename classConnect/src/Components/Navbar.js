@@ -101,7 +101,7 @@ function ResponsiveAppBar({ username,profileId }) {
             variant="h6"
             noWrap
             component={Link}
-            to="/"
+            to={`/home/${profileId}`}
             sx={{
               mr: isExtraexexSmallScreen ? '14%' : isExtraexSmallScreen? '18%' : isExtraSmallScreen ? '25%' : isSmallScreen ? '28%' : isMediumScreen ? '32%' : '37%',
               display: { xs: 'none', md: 'flex' },
@@ -157,7 +157,7 @@ function ResponsiveAppBar({ username,profileId }) {
             variant="h5"
             noWrap
             component={Link}
-            to="/"
+            to={`/home/${profileId}`}
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },

@@ -1,20 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+import { useParams, useHistory } from "react-router-dom";
 import Footer from './Footer.js';
 import Navbar from './Navbar.js';
-import { useHistory } from 'react-router-dom';
 
 function Home() {
   const [profile, setProfile] = useState({});
   const location = useLocation();
   const history = useHistory();
-
+  const { profileId } = useParams();
   useEffect(() => {
     // Fetch data from the backend with the username as a query parameter
-    axios.get(`http://localhost:3002/profiles/${location.state.profileId}`)
+    axios.get(`http://localhost:3002/profiles/${profileId}`)
       .then(response => {
-        console.log(location.state.profileId);
+        console.log(profileId);
         setProfile(response.data); // Assuming response.data is an object
       })
       .catch(error => {
@@ -24,7 +24,7 @@ function Home() {
 
   return (
     <div className="App">
-      <Navbar username={profile.email} profileId={location.state.profileId} />
+      <Navbar username={profile.email} profileId={profileId} />
       <div className="create-box">
         <header className="App-header">
           <h1>Name: {profile.name}</h1>

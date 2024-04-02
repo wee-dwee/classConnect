@@ -40,7 +40,7 @@ export default function LoginForm({ setUsername, setProfileId }) {
       setUsername(user.username); // Assuming user object contains username
       setProfileId(profileId);
 
-      history.push('/home', { profileId: profileId });
+      history.push(`/home/${profileId}`, { profileId: profileId });
     } catch (err) {
       setError('Invalid email or password. Please try again.');
       console.error('Login error:', err);

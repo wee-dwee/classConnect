@@ -39,7 +39,7 @@ function App() {
           <Route exact path="/register">
             <Register />
           </Route>
-          <Route exact path="/home">
+          <Route exact path="/home/:profileId">
             <Home />
           </Route>
           <Route exact path="/createclass/:profileId">
