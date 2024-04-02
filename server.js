@@ -31,23 +31,8 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-const profileSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  bio: String,
-  image: String,
-  isInstructor: Boolean,
-});
+//--------------------------------------------------SCHEMAS DEFINED HERE--------------------------------------------------
 
-const classSchema = new mongoose.Schema({
-  name: String,
-  OwnerUser: String,
-  bio: String,
-  classcode: String,
-});
-
-const Profile = mongoose.model("Profile", profileSchema);
-const Class = mongoose.model("Class", classSchema);
 const userSchema = new mongoose.Schema({
   username: String,
   password: String,
@@ -57,8 +42,33 @@ const userSchema = new mongoose.Schema({
     ref: "Profile",
   },
 });
+const profileSchema = new mongoose.Schema({
+  name: String,
+  email: String,
+  bio: String,
+  image: String,
+  isInstructor: Boolean,
+  joinedClasses: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Class'
+  }]
+});
+
+
+const classSchema = new mongoose.Schema({
+  name: String,
+  OwnerUser: String,
+  bio: String,
+  classcode: String,
+  students: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile'
+  }]
+});
 
 const User = mongoose.model("User", userSchema);
+const Profile = mongoose.model("Profile", profileSchema);
+const Class = mongoose.model("Class", classSchema);
 
 // Get all profiles
 app.use(bodyParser.json());
@@ -73,7 +83,7 @@ const storage = multer.diskStorage({
   },
 }); // You can adjust storage settings as needed
 const upload = multer({ storage: storage });
-
+//--------------------------------------------------PROFILE SECTION--------------------------------------------------
 // Create a new profile with an image
 app.post("/profiles", upload.single("image"), async (req, res) => {
   try {
@@ -108,7 +118,29 @@ app.get("/profiles/:profileId", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+app.put("/editprofile/:profileId", async (req, res) => {
+  try {
+    const { name, email, bio } = req.body;
+    const profileId = req.params.profileId;
+    console.log(profileId);
+    // Find the user's profile by username
+    const profile = await Profile.findOneAndUpdate(
+      { _id: profileId },
+      { name, email, bio },
+      { new: true } // Return the updated document
+    );
 
+    if (!profile) {
+      return res.status(404).json({ error: "Profile not found" });
+    }
+
+    res.status(200).json({ message: "Profile updated successfully", profile });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+//--------------------------------------------------CLASS CREATION AND JOINING--------------------------------------------------
 app.get("/classes/:profileid", async (req, res) => {
   try {
     const { profileid } = req.params;
@@ -123,7 +155,6 @@ app.get("/classes/:profileid", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
 app.post("/classes", async (req, res) => {
   try {
     // Extract class details from the request body
@@ -160,8 +191,47 @@ app.post("/classes", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.post("/join-class", async (req, res) => {
+  try {
+    const { classcode, profileId } = req.body;
+
+    // Find the class by class code
+    const classObj = await Class.findOne({ classcode: classcode });
+    if (!classObj) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+
+    // Find the user (student) by profile ID
+    const studentProfile = await Profile.findById(profileId);
+    if (!studentProfile ) {
+      return res.status(404).json({ error: "Student profile not found" });
+    }
+    if (studentProfile.isInstructor) {
+      return res.status(400).json({ error: "You Are a Faculty" });
+    }
+
+    // Check if the student is already added to the class
+    if (classObj.students.includes(profileId)) {
+      return res.status(400).json({ error: "Student already added to the class" });
+    }
+
+    // Add the student to the class
+    classObj.students.push(profileId);
+    await classObj.save();
+
+    // Add the class to the student's joinedClasses array
+    studentProfile.joinedClasses.push(classObj._id);
+    await studentProfile.save();
+
+    res.status(200).json({ message: "Student added to the class successfully" });
+  } catch (error) {
+    console.error("Error adding student to class:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 
+//--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
 app.post("/api/register", async (req, res) => {
   try {
     const { name, username, password, isInstructor } = req.body;
@@ -286,7 +356,7 @@ app.post("/api/update-password", async (req, res) => {
 app.get("/", (req, res) => {
   res.send("Welcome to the homepage!");
 });
-
+//--------------------------------------------------FORGET PASSWORD SECTION--------------------------------------------------
 app.post("/api/send-otp", async (req, res) => {
   const { username } = req.body;
 
@@ -330,28 +400,7 @@ app.post("/api/send-otp", async (req, res) => {
   }
 });
 // Update profile by username
-app.put("/editprofile/:profileId", async (req, res) => {
-  try {
-    const { name, email, bio } = req.body;
-    const profileId = req.params.profileId;
-    console.log(profileId);
-    // Find the user's profile by username
-    const profile = await Profile.findOneAndUpdate(
-      { _id: profileId },
-      { name, email, bio },
-      { new: true } // Return the updated document
-    );
 
-    if (!profile) {
-      return res.status(404).json({ error: "Profile not found" });
-    }
-
-    res.status(200).json({ message: "Profile updated successfully", profile });
-  } catch (error) {
-    console.error("Error updating profile:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 
 app.post("/api/verify-otp", async (req, res) => {
   const { otp, mailOTP } = req.body;

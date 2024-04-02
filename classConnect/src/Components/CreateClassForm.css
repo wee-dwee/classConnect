@@ -1,0 +1,42 @@
+.create-class-form-container {
+    background-color: #f0f0f0; /* Light gray background color */
+    padding: 20px;
+    border-radius: 10px;
+    animation: fadeIn 1s ease-in; /* Fade in animation */
+    width: 400px; /* Set a fixed width */
+    margin: 50px auto 0; /* Center align horizontally and add space at the top */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .create-class-form-container form {
+    width: 100%; /* Ensure the form takes full width */
+  }
+  
+  .create-class-form-container form div {
+    margin-bottom: 10px; /* Add some vertical spacing between form elements */
+  }
+  
+  .create-class-form-container form label {
+    margin-right: 10px; /* Add some spacing between label and input */
+  }
+  
+  .create-class-form-container form textarea,
+  .create-class-form-container form input[type="text"] {
+    width: 100%; /* Ensure inputs take full width */
+  }
+  
+  .create-class-form-container form button {
+    width: 100%; /* Ensure the button takes full width */
+  }
+  

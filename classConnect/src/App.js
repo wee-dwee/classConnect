@@ -12,6 +12,8 @@ import { Route, Switch, Link, useLocation } from "react-router-dom";
 import { UserContextProvider } from "./UserContext";
 import Navbar from "./Components/Navbar";
 import CreateClassForm from "./Components/createclass";
+import JoinClassPage from "./Components/joinclass";
+
 
 function App() {
   const location = useLocation();
@@ -60,6 +62,9 @@ function App() {
           </Route>
           <Route exact path="/editprofile/:profileId">
             <EditProfile />
+          </Route>
+          <Route exact path="/join-class/:profileId">
+            <JoinClassPage />
           </Route>
           <Route exact path="/aboutus">
             <AboutUs />

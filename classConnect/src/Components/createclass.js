@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Link, useLocation, useParams } from "react-router-dom"; // Added useParams
+import './CreateClassForm.css'; // Import CSS file for styling
 
 function CreateClassForm() {
   const [name, setName] = useState('');
@@ -35,7 +36,7 @@ function CreateClassForm() {
   };
 
   return (
-    <div>
+    <div className="create-class-form-container"> {/* Added className for styling */}
       <h2>Create Class</h2>
       <form onSubmit={handleSubmit}>
         <div>

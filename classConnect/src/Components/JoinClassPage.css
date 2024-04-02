@@ -1,0 +1,46 @@
+/* JoinClassPage.css */
+.join-class-container {
+    background-color: #f0f0f0; /* Light gray background color */
+    padding: 20px;
+    border-radius: 10px;
+    animation: fadeIn 1s ease-in; /* Fade in animation */
+    width: 400px; /* Set a fixed width */
+    margin: 50px auto 0; /* Center align horizontally and add space at the top */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .join-class-container div {
+    margin-bottom: 10px; /* Add some vertical spacing between form elements */
+  }
+  
+  .join-class-container label {
+    margin-right: 10px; /* Add some spacing between label and input */
+  }
+  
+  .join-class-container input[type="text"] {
+    width: 100%; /* Ensure inputs take full width */
+  }
+  
+  .join-class-container button {
+    width: 100%; /* Ensure the button takes full width */
+  }
+  
+  .error-message {
+    color: red; /* Set error message color */
+  }
+  
+  .success-message {
+    color: green; /* Set success message color */
+  }
+  
