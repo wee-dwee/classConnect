@@ -390,6 +390,26 @@ app.post(
     }
   }
 );
+app.post("/remove-image/:username",async (req,res)=>{
+  try{
+    const email = req.params.username;
+    const profile = await Profile.findOneAndUpdate(
+      {email:email},
+      {image:null}
+    );
+    if(!profile)
+    {
+      return res.status(404).json({error:"Profile not found"});
+    }
+    return res.json({message:"Image uploaded successfully",profile});
+  } 
+  catch(error){
+    console.error("Error removing error:",error);
+    return res.status(500).json({error:"Internal Server Error"});
+  }
+    
+
+})
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

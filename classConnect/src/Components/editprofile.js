@@ -74,6 +74,16 @@ export default function EditProfile() {
       // Handle error, if needed
     }
   };
+  const removeImage = async () => {
+      try{
+        await axios.post(`http://localhost:3002/remove-image/${email}`);
+        alert("Image Removed Successfully");
+      }
+      catch (error)
+      {
+        console.error("Error removing image:",error);
+      }
+  }
   return (
     <>
       <Navbar username={email} profileId={profileId} />
@@ -120,7 +130,7 @@ export default function EditProfile() {
                     className="inputimage"
                   />
                   <button type="button" onClick={uploadImage} className="uploadimage">Upload Image</button>
-                  <button type="button" onClick={uploadImage} className="uploadimage">Remove Image</button>
+                  <button type="button" onClick={removeImage} className="uploadimage">Remove Image</button>
                 </div>
               </div>
               </label>
