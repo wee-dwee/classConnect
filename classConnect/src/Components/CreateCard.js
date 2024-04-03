@@ -6,7 +6,7 @@ import "./style.css";
 
 const JoinedClasses = () => {
   return (
-    <li className="joined__list">
+        <div className="joined__list">
       <div className="joined__wrapper">
         <div className="joined__container">
           <div className="joined__imgWrapper" />
@@ -17,20 +17,20 @@ const JoinedClasses = () => {
             </Link>
             <p className="joined__owner">vinitmehta382@gmail.com</p>
           </div>
-          <Avatar
-            className="joined__avatar"
-            src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s75-c-fbw=1/photo.jpg"
-          />
-          <div className="joined__text">
-            hello
-          </div>
         </div>
+        <Avatar
+          className="joined__avatar"
+          src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s75-c-fbw=1/photo.jpg"
+        />
+      </div>
+      <div>
       </div>
       <div className="joined__bottom">
         <PermContactCalendar />
         <FolderOpen />
       </div>
-    </li>
+    </div>
+    
   );
 };
 

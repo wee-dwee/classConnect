@@ -13,12 +13,23 @@ import { UserContextProvider } from "./UserContext";
 import Navbar from "./Components/Navbar";
 import CreateClassForm from "./Components/createclass";
 import JoinClassPage from "./Components/joinclass";
-
+import CreateCard from './Components/CreateCard.js';
 
 function App() {
   const location = useLocation();
   const [username, setUsername] = useState("");
   const [profileId, setProfileId] = useState("");
+  const createdClasses = [
+    { id: 1, title: "Class 1", owner: "owner1@example.com"},
+    { id: 2, title: "Class 2", owner: "owner2@example.com" },
+    { id: 3, title: "Class 3", owner: "owner3@example.com" },
+    { id: 4, title: "Class 4", owner: "owner4@example.com" },
+    { id: 5, title: "Class 5", owner: "owner5@example.com" },
+    { id: 6, title: "Class 6", owner: "owner6@example.com" },
+    { id: 7, title: "Class 7", owner: "owner7@example.com" },
+    { id: 8, title: "Class 8", owner: "owner8@example.com" },
+    { id: 9, title: "Class 9", owner: "owner9@example.com" }
+  ];
 
   const setUsernameFromLoginForm = useCallback((enteredUsername) => {
     setUsername(enteredUsername);
@@ -30,7 +41,6 @@ function App() {
   return (
     <div>
       <UserContextProvider>
-        {/* <Navbar p={username} /> */}
         <Switch>
           <Route exact path="/">
             <Loginform setUsername={setUsernameFromLoginForm} setProfileId={setProfileFromLoginForm}/>
@@ -55,6 +65,13 @@ function App() {
           </Route>
           <Route exact path="/join-class/:profileId">
             <JoinClassPage username={username} profileId={profileId}/>
+          </Route>
+          <Route exact path="/createcard">
+          <ol className="joined">
+            {createdClasses.map((item) => (
+              <CreateCard/>
+            ))}
+          </ ol>
           </Route>
           <Route exact path="/aboutus">
             <AboutUs />
