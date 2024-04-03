@@ -3,6 +3,8 @@ import { FolderOpen, PermContactCalendar } from '@mui/icons-material';
 import React from "react";
 import { Link } from "react-router-dom";
 import "./style.css";
+import student from "./student.png";
+import teacher from './teacher.png';
 
 const JoinedClasses = () => {
   return (
@@ -18,10 +20,11 @@ const JoinedClasses = () => {
             <p className="joined__owner">vinitmehta382@gmail.com</p>
           </div>
         </div>
-        <Avatar
+        {/* <Avatar
           className="joined__avatar"
           src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s75-c-fbw=1/photo.jpg"
-        />
+        /> */}
+        <img src={teacher} alt="Default Student Image" className="joined__avatar" />
       </div>
       <div>
       </div>

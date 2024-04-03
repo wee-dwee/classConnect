@@ -20,7 +20,7 @@ function App() {
   const [username, setUsername] = useState("");
   const [profileId, setProfileId] = useState("");
   const createdClasses = [
-    { id: 1, title: "Class 1", owner: "owner1@example.com"},
+    { id: 1, title: "Class 1", owner: "owner1@example.com" },
     { id: 2, title: "Class 2", owner: "owner2@example.com" },
     { id: 3, title: "Class 3", owner: "owner3@example.com" },
     { id: 4, title: "Class 4", owner: "owner4@example.com" },
@@ -66,13 +66,13 @@ function App() {
           <Route exact path="/join-class/:profileId">
             <JoinClassPage username={username} profileId={profileId}/>
           </Route>
-          <Route exact path="/createcard">
+          {/* <Route exact path="/createcard">
           <ol className="joined">
             {createdClasses.map((item) => (
               <CreateCard/>
             ))}
           </ ol>
-          </Route>
+          </Route> */}
           <Route exact path="/aboutus">
             <AboutUs />
           </Route>
