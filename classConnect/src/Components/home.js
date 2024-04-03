@@ -34,12 +34,12 @@ function Home() {
         {profile.isInstructor ? (
           // If the user is an instructor, display classes taught by the instructor
           createdClasses.map((classItem) => (
-            <CreateCard keyname={classItem.name} title={classItem.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} />
+            <CreateCard keyname={classItem.name} title={classItem.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} profileId={profileId}/>
           ))
         ) : (
           // If the user is a student, display classes joined by the student
           createdClasses.map((classItem) => (
-            <CreateCard keyname={classItem.name} title={classItem.name} owner={classItem.owner.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} />
+            <CreateCard keyname={classItem.name} title={classItem.name} owner={classItem.owner.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} profileId={classItem.owner._id}/>
           ))
         )}
       </ol>
