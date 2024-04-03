@@ -1,7 +1,7 @@
 // JoinClassPage.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams } from "react-router-dom"; // Removed unnecessary import
+import { useParams, useHistory } from "react-router-dom"; // Removed unnecessary import
 import './JoinClassPage.css';
 import Footer from './Footer';
 import Navbar from './Navbar';
@@ -11,12 +11,15 @@ const JoinClassPage = ({username}) => {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const { profileId } = useParams(); // Added to extract username from URL params
+  const history = useHistory(); // Initialize useHistory
 
   const handleJoinClass = async () => {
     try {
       const response = await axios.post('http://localhost:3002/join-class', { classcode, profileId });
       setSuccessMessage(response.data.message);
       setErrorMessage('');
+      alert("You are added to the class successfully");
+      history.push(`/home/${profileId}`);
     } catch (error) {
       if (error.response) {
         setErrorMessage(error.response.data.error);

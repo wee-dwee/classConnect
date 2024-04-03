@@ -21,6 +21,11 @@
       width: 85vw;
     }
   }
+
+  .error-message {
+    color: red;
+  }
+  
   
   @keyframes fadeIn {
     from {

@@ -212,7 +212,7 @@ app.post("/join-class", async (req, res) => {
 
     // Check if the student is already added to the class
     if (classObj.students.includes(profileId)) {
-      return res.status(400).json({ error: "Student already added to the class" });
+      return res.status(400).json({ error: "You are already added to the class" });
     }
 
     // Add the student to the class
@@ -223,7 +223,7 @@ app.post("/join-class", async (req, res) => {
     studentProfile.joinedClasses.push(classObj._id);
     await studentProfile.save();
 
-    res.status(200).json({ message: "Student added to the class successfully" });
+    res.status(200).json({ message: "You are added to the class successfully" });
   } catch (error) {
     console.error("Error adding student to class:", error);
     res.status(500).json({ error: "Internal server error" });
