@@ -14,25 +14,34 @@ function Home() {
   const { profileId } = useParams();
 
   useEffect(() => {
-    axios.get(`http://localhost:3002/show-classes/instructor/${profileId}`)
-      .then(response => {
-        console.log(profileId);
-        setProfile(response.data); // Assuming response.data is an object containing profile information
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3002/show-classes/${profileId}`);
+        setProfile(response.data.profile); // Assuming response.data.profile is an object containing profile information
         setCreatedClasses(response.data.classes); // Assuming response.data.classes is an array of classes
-        console.log(createdClasses);
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error fetching data:', error);
-      });
+      }
+    };
+
+    fetchData();
   }, [profileId]);
 
   return (
     <>
       <Navbar username={profile.email} profileId={profileId} />
       <ol className="joined">
-        {createdClasses.map((classItem) => (
-          <CreateCard keyname={classItem.name} title={classItem.name} classcode={classItem.classcode} />
-        ))}
+        {profile.isInstructor ? (
+          // If the user is an instructor, display classes taught by the instructor
+          createdClasses.map((classItem) => (
+            <CreateCard keyname={classItem.name} title={classItem.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} />
+          ))
+        ) : (
+          // If the user is a student, display classes joined by the student
+          createdClasses.map((classItem) => (
+            <CreateCard keyname={classItem.name} title={classItem.name} owner={classItem.owner.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} />
+          ))
+        )}
       </ol>
       <Footer />
     </>

@@ -6,9 +6,9 @@ import "./style.css";
 import student from "./student.png";
 import teacher from './teacher.png';
 
-const CreateCard = ({keyname,title,classcode}) => {
+const CreateCard = ({ keyname, owner, classcode, isInstructor }) => {
   return (
-        <div className="joined__list">
+    <div className="joined__list">
       <div className="joined__wrapper">
         <div className="joined__container">
           <div className="joined__imgWrapper" />
@@ -17,13 +17,11 @@ const CreateCard = ({keyname,title,classcode}) => {
             <Link className="joined__title" to={"/profile"}>
               <h2>{keyname}</h2>
             </Link>
-            <p className="joined__owner">Code:{classcode}</p>
+            <p className="joined__owner">
+              {isInstructor ? classcode : owner}
+            </p>
           </div>
         </div>
-        {/* <Avatar
-          className="joined__avatar"
-          src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s75-c-fbw=1/photo.jpg"
-        /> */}
         <img src={teacher} alt="Default Student Image" className="joined__avatar" />
       </div>
       <div>
@@ -33,7 +31,6 @@ const CreateCard = ({keyname,title,classcode}) => {
         <FolderOpen />
       </div>
     </div>
-    
   );
 };
 

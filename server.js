@@ -281,46 +281,29 @@ app.get("/show-classes/:profileId", async (req, res) => {
   try {
     const profileId = req.params.profileId;
 
-    // Find the student's profile
-    const studentProfile = await Profile.findById(profileId);
-    if (!studentProfile) {
-      return res.status(404).json({ error: "Student profile not found" });
-    }
-    if (studentProfile.isInstructor) {
-      return res.status(400).json({ error: "You Are a Faculty" });
+    // Find the profile
+    const profile = await Profile.findById(profileId);
+    if (!profile) {
+      return res.status(404).json({ error: "Profile not found" });
     }
 
-    // Find the classes joined by the student
-    const joinedClasses = await Class.find({ students: profileId }).populate('owner');
+    let classes = [];
 
-    res.status(200).json({ classes: joinedClasses });
+    if (profile.isInstructor) {
+      // If the profile is an instructor, find classes taught by the instructor
+      classes = await Class.find({ owner: profileId });
+    } else {
+      // If the profile is a student, find classes joined by the student and populate the owner field
+      classes = await Class.find({ students: profileId }).populate('owner');
+    }
+
+    res.status(200).json({ profile, classes });
   } catch (error) {
-    console.error("Error retrieving classes for student:", error);
+    console.error("Error retrieving classes:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
-app.get("/show-classes/instructor/:profileId", async (req, res) => {
-  try {
-    const profileId = req.params.profileId;
 
-    // Find the instructor's profile
-    const instructorProfile = await Profile.findById(profileId);
-    if (!instructorProfile) {
-      return res.status(404).json({ error: "Instructor profile not found" });
-    }
-    if (!instructorProfile.isInstructor) {
-      return res.status(400).json({ error: "You are not an instructor" });
-    }
-
-    // Find the classes taught by the instructor
-    const taughtClasses = await Class.find({ owner: profileId });
-
-    res.status(200).json({ classes: taughtClasses });
-  } catch (error) {
-    console.error("Error retrieving classes for instructor:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 // Add announcement
 app.post("/add-announcement/:classId", async (req, res) => {
   try {
