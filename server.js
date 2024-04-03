@@ -74,8 +74,34 @@ const classSchema = new mongoose.Schema({
   students: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile'
+  }],
+  announcements: [{
+    title: String,
+    content: String,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile'
+    }
+  }],
+  assignments: [{
+    title: String,
+    description: String,
+    dueDate: Date,
+    createdAt: {
+      type: Date,
+      default: Date.now
+    },
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile'
+    }
   }]
 });
+
 
 
 const User = mongoose.model("User", userSchema);
@@ -292,6 +318,66 @@ app.get("/show-classes/instructor/:profileId", async (req, res) => {
     res.status(200).json({ classes: taughtClasses });
   } catch (error) {
     console.error("Error retrieving classes for instructor:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+// Add announcement
+app.post("/add-announcement/:classId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const { title, content, createdBy } = req.body;
+
+    // Check if class exists
+    const targetClass = await Class.findById(classId);
+    if (!targetClass) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+
+    // Create the announcement
+    const announcement = {
+      title,
+      content,
+      createdBy
+    };
+
+    // Push the announcement to the class
+    targetClass.announcements.push(announcement);
+    await targetClass.save();
+
+    res.status(201).json({ message: "Announcement added successfully" });
+  } catch (error) {
+    console.error("Error adding announcement:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// Add assignment
+app.post("/add-assignment/:classId", async (req, res) => {
+  try {
+    const classId = req.params.classId;
+    const { title, description, dueDate, createdBy } = req.body;
+
+    // Check if class exists
+    const targetClass = await Class.findById(classId);
+    if (!targetClass) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+
+    // Create the assignment
+    const assignment = {
+      title,
+      description,
+      dueDate,
+      createdBy
+    };
+
+    // Push the assignment to the class
+    targetClass.assignments.push(assignment);
+    await targetClass.save();
+
+    res.status(201).json({ message: "Assignment added successfully" });
+  } catch (error) {
+    console.error("Error adding assignment:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });
