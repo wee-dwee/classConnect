@@ -56,15 +56,27 @@ const profileSchema = new mongoose.Schema({
 
 
 const classSchema = new mongoose.Schema({
-  name: String,
-  OwnerUser: String,
+  name: {
+    type: String,
+    required: true
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Profile',
+    required: true
+  },
   bio: String,
-  classcode: String,
+  classcode: {
+    type: String,
+    required: true,
+    unique: true
+  },
   students: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile'
   }]
 });
+
 
 const User = mongoose.model("User", userSchema);
 const Profile = mongoose.model("Profile", profileSchema);
@@ -159,28 +171,32 @@ app.post("/classes", async (req, res) => {
   try {
     // Extract class details from the request body
     const { name, OwnerUserID, bio, classcode } = req.body;
-    const profile_ins=await Profile.findOne({_id:OwnerUserID});
-    const OwnerUser=profile_ins.email;
+
     // Check if the classcode is unique
     const existingClass = await Class.findOne({ classcode });
     if (existingClass) {
       return res.status(400).json({ error: "Class code already exists" });
     }
 
+    // Find the profile of the class owner
+    const ownerProfile = await Profile.findById(OwnerUserID);
+    if (!ownerProfile) {
+      return res.status(404).json({ error: "Owner profile not found" });
+    }
+
+    // Ensure the owner is authorized to create the class
+    if (!ownerProfile.isInstructor) {
+      console.log("Not Authorized to create class:", ownerProfile.email);
+      return res.status(403).json({ error: "Not authorized to create class" });
+    }
+
     // Create a new class instance
     const newClass = new Class({
       name,
-      OwnerUser,
+      owner: OwnerUserID,
       bio,
       classcode,
     });
-
-    // Check if the owner is authorized to create the class
-    const profile = await Profile.findOne({ email: OwnerUser });
-    if (!profile || !profile.isInstructor) {
-      console.log("Not Authorized to create class:", OwnerUser);
-      return res.status(403).json({ error: "Not authorized to create class" });
-    }
 
     // Save the new class to the database
     await newClass.save();
@@ -191,23 +207,26 @@ app.post("/classes", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 app.post("/join-class", async (req, res) => {
   try {
     const { classcode, profileId } = req.body;
 
     // Find the class by class code
-    const classObj = await Class.findOne({ classcode: classcode });
+    const classObj = await Class.findOne({ classcode });
     if (!classObj) {
       return res.status(404).json({ error: "Class not found" });
     }
 
-    // Find the user (student) by profile ID
+    // Find the student profile by ID
     const studentProfile = await Profile.findById(profileId);
-    if (!studentProfile ) {
+    if (!studentProfile) {
       return res.status(404).json({ error: "Student profile not found" });
     }
+    
+    // Check if the user is an instructor
     if (studentProfile.isInstructor) {
-      return res.status(400).json({ error: "You Are a Faculty" });
+      return res.status(400).json({ error: "You are an instructor" });
     }
 
     // Check if the student is already added to the class
@@ -229,6 +248,55 @@ app.post("/join-class", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// Assuming you're using Express.js
+
+app.get("/show-classes/:profileId", async (req, res) => {
+  try {
+    const profileId = req.params.profileId;
+
+    // Find the student's profile
+    const studentProfile = await Profile.findById(profileId);
+    if (!studentProfile) {
+      return res.status(404).json({ error: "Student profile not found" });
+    }
+    if (studentProfile.isInstructor) {
+      return res.status(400).json({ error: "You Are a Faculty" });
+    }
+
+    // Find the classes joined by the student
+    const joinedClasses = await Class.find({ students: profileId }).populate('owner');
+
+    res.status(200).json({ classes: joinedClasses });
+  } catch (error) {
+    console.error("Error retrieving classes for student:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+app.get("/show-classes/instructor/:profileId", async (req, res) => {
+  try {
+    const profileId = req.params.profileId;
+
+    // Find the instructor's profile
+    const instructorProfile = await Profile.findById(profileId);
+    if (!instructorProfile) {
+      return res.status(404).json({ error: "Instructor profile not found" });
+    }
+    if (!instructorProfile.isInstructor) {
+      return res.status(400).json({ error: "You are not an instructor" });
+    }
+
+    // Find the classes taught by the instructor
+    const taughtClasses = await Class.find({ owner: profileId });
+
+    res.status(200).json({ classes: taughtClasses });
+  } catch (error) {
+    console.error("Error retrieving classes for instructor:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 
 
 //--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
