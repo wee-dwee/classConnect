@@ -1,37 +1,79 @@
-import Avatar from "@mui/material/Avatar";
-import { FolderOpen, PermContactCalendar } from '@mui/icons-material';
-import React from "react";
-import { Link } from "react-router-dom";
-import "./style.css";
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Link, useLocation, useParams, useHistory } from "react-router-dom"; // Added useHistory
+import './CreateClassForm.css'; // Import CSS file for styling
+import Navbar from './Navbar';
+import Footer from './Footer';
 
-const JoinedClasses = () => {
+function CreateClassForm({ username }) {
+  const [name, setName] = useState('');
+  const [bio, setBio] = useState('');
+  const [classCode, setClassCode] = useState('');
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState(''); // Add errorMessage state
+  const location = useLocation();
+  const { profileId } = useParams();
+  const history = useHistory(); 
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        
+      // Make a POST request to create a new class
+      const response = await axios.post('http://localhost:3002/classes', {
+        name,
+        OwnerUserID: profileId,
+        bio,
+        classcode: classCode
+      });
+      
+      // Display success message if class creation is successful
+      setMessage(response.data.message);
+      
+      // Reset form fields
+      setName('');
+      setBio('');
+      setClassCode('');
+      
+      // Show alert message after successful creation
+      alert('Class created successfully!');
+      
+      // Redirect to a different page after successful creation
+      history.push(`/home/${profileId}`);
+      
+    } catch (error) {
+      // Display error message if class creation fails
+      setErrorMessage('Error creating class');
+      console.error('Error creating class:', error);
+    }
+  };
+
   return (
-    <li className="joined__list">
-      <div className="joined__wrapper">
-        <div className="joined__container">
-          <div className="joined__imgWrapper" />
-          <div className="joined__image" />
-          <div className="joined__content">
-            <Link className="joined__title" to={"/profile"}>
-              <h2>Robotics</h2>
-            </Link>
-            <p className="joined__owner">vinitmehta382@gmail.com</p>
+    <>
+      <Navbar username={username} profileId={profileId}/>
+      <div className="create-class-form-container"> {/* Added className for styling */}
+        <h2 className="formhead">Create Class</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label className="headings">Class Name:</label>
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
           </div>
-          <Avatar
-            className="joined__avatar"
-            src="https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/s75-c-fbw=1/photo.jpg"
-          />
-          <div className="joined__text">
-            hello
+          <div>
+            <label className="headings">Bio:</label>
+            <textarea value={bio} onChange={(e) => setBio(e.target.value)} required className="bio-textarea"/>
           </div>
-        </div>
+          <div>
+            <label className="headings">Class Code:</label>
+            <input type="text" value={classCode} onChange={(e) => setClassCode(e.target.value)} required />
+          </div>
+          <button type="submit" className="createclassbtn">Create Class</button>
+        </form>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {message && <p>{message}</p>}
       </div>
-      <div className="joined__bottom">
-        <PermContactCalendar />
-        <FolderOpen />
-      </div>
-    </li>
+      <Footer />
+    </>
   );
-};
+}
 
-export default JoinedClasses;
+export default CreateClassForm;

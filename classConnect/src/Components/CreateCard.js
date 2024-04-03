@@ -6,7 +6,7 @@ import "./style.css";
 import student from "./student.png";
 import teacher from './teacher.png';
 
-const JoinedClasses = () => {
+const CreateCard = ({keyname,title,classcode}) => {
   return (
         <div className="joined__list">
       <div className="joined__wrapper">
@@ -15,9 +15,9 @@ const JoinedClasses = () => {
           <div className="joined__image" />
           <div className="joined__content">
             <Link className="joined__title" to={"/profile"}>
-              <h2>Robotics</h2>
+              <h2>{keyname}</h2>
             </Link>
-            <p className="joined__owner">vinitmehta382@gmail.com</p>
+            <p className="joined__owner">Code:{classcode}</p>
           </div>
         </div>
         {/* <Avatar
@@ -37,4 +37,4 @@ const JoinedClasses = () => {
   );
 };
 
-export default JoinedClasses;
+export default CreateCard;
