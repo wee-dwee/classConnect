@@ -74,34 +74,8 @@ const classSchema = new mongoose.Schema({
   students: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Profile'
-  }],
-  announcements: [{
-    title: String,
-    content: String,
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile'
-    }
-  }],
-  assignments: [{
-    title: String,
-    description: String,
-    dueDate: Date,
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile'
-    }
   }]
 });
-
 
 
 const User = mongoose.model("User", userSchema);
@@ -130,7 +104,7 @@ app.post("/profiles", upload.single("image"), async (req, res) => {
 
     // Here you can save the image to your preferred storage solution (e.g., AWS S3, Firebase Storage)
     // For simplicity, we are just encoding the image buffer as base64 and storing it in the database
-    const image = data:image/png;base64,${imageBuffer.toString("base64")};
+    const image = `data:image/png;base64,${imageBuffer.toString("base64")}`;
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -321,66 +295,6 @@ app.get("/show-classes/instructor/:profileId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-// Add announcement
-app.post("/add-announcement/:classId", async (req, res) => {
-  try {
-    const classId = req.params.classId;
-    const { title, content, createdBy } = req.body;
-
-    // Check if class exists
-    const targetClass = await Class.findById(classId);
-    if (!targetClass) {
-      return res.status(404).json({ error: "Class not found" });
-    }
-
-    // Create the announcement
-    const announcement = {
-      title,
-      content,
-      createdBy
-    };
-
-    // Push the announcement to the class
-    targetClass.announcements.push(announcement);
-    await targetClass.save();
-
-    res.status(201).json({ message: "Announcement added successfully" });
-  } catch (error) {
-    console.error("Error adding announcement:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
-
-// Add assignment
-app.post("/add-assignment/:classId", async (req, res) => {
-  try {
-    const classId = req.params.classId;
-    const { title, description, dueDate, createdBy } = req.body;
-
-    // Check if class exists
-    const targetClass = await Class.findById(classId);
-    if (!targetClass) {
-      return res.status(404).json({ error: "Class not found" });
-    }
-
-    // Create the assignment
-    const assignment = {
-      title,
-      description,
-      dueDate,
-      createdBy
-    };
-
-    // Push the assignment to the class
-    targetClass.assignments.push(assignment);
-    await targetClass.save();
-
-    res.status(201).json({ message: "Assignment added successfully" });
-  } catch (error) {
-    console.error("Error adding assignment:", error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
 
 
 
@@ -409,7 +323,7 @@ app.post("/api/register", async (req, res) => {
     const newProfile = new Profile({
       name,
       email: username,
-      bio: Hi there i am using classconnect,
+      bio: `Hi there i am using classconnect`,
       isInstructor,
     });
     await newProfile.save();
@@ -534,7 +448,7 @@ app.post("/api/send-otp", async (req, res) => {
       from: process.env.EMAIL,
       to: username,
       subject: "OTP for Password Reset",
-      text: Your OTP for password reset is ${otp},
+      text: `Your OTP for password reset is ${otp}`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -614,5 +528,5 @@ app.post("/remove-image/:username",async (req,res)=>{
 
 })
 app.listen(PORT, () => {
-  console.log(Server is running on port ${PORT});
+  console.log(`Server is running on port ${PORT}`);
 });
