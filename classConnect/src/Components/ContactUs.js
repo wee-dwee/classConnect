@@ -2,8 +2,10 @@ import React from 'react';
 import './contactus.css';
 import Footer from './Footer.js';
 import Navbar from './Navbar.js';
+import { useParams, useHistory } from "react-router-dom";
 
-export default function ContactUs({username,profileId}) {
+export default function ContactUs({username}) {
+  const { profileId } = useParams();
   return (
     <>
     <Navbar username={username} profileId={profileId}/>

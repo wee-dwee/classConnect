@@ -37,7 +37,6 @@ function App() {
   const setProfileFromLoginForm = useCallback((enteredProfile) => {
     setProfileId(enteredProfile);
   }, []);
-  console.log(profileId)
   return (
     <div>
       <UserContextProvider>
@@ -73,11 +72,11 @@ function App() {
             ))}
           </ ol>
           </Route> */}
-          <Route exact path="/aboutus">
-            <AboutUs />
+          <Route exact path="/aboutus/:profileId">
+            <AboutUs username={username}/>
           </Route>
           <Route exact path="/contactus/:profileId">
-            <ContactUs username={username} profileId={profileId}/>
+            <ContactUs username={username}/>
           </Route>
         </Switch>
       </UserContextProvider>

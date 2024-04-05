@@ -93,7 +93,7 @@ function ResponsiveAppBar({ username,profileId }) {
   };
 
   const handleAboutUs = () => {
-    history.push("/aboutus");
+    history.push(`/aboutus/${profileId}`);
     handleCloseUserMenu();
   };
 
@@ -101,9 +101,8 @@ function ResponsiveAppBar({ username,profileId }) {
     history.push(`/contactus/${profileId}`);
     handleCloseUserMenu();
   };
-
   return (
-    <AppBar position="static">
+    <AppBar position="sticky">
       <Container maxWidth="false">
         <Toolbar disableGutters>
           <ClassIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
