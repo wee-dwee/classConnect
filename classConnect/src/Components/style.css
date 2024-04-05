@@ -4,6 +4,7 @@
     padding-left: 1.5rem;
     padding-top: 1.5rem;
     margin-left: 5%;
+    text-decoration: none;
   }
   ul,
   ol {
@@ -26,6 +27,7 @@
     border: 0.0625rem solid #dadce0;
     -webkit-border-radius: 0.5rem;
     border-radius: 0.5rem;
+    text-decoration: none;
   }
   .joined__imgWrapper {
     height: 100%;
@@ -34,6 +36,7 @@
     top: 0;
     width: 100%;
     background-color: #174ea6;
+    text-decoration: none;
   }
   .joined__image {
     background-image: url(https://gstatic.com/classroom/themes/Physics.jpg);
@@ -45,9 +48,11 @@
     background-repeat: no-repeat;
     -webkit-background-size: cover;
     background-size: cover;
+    text-decoration: none;
   }
   .joined__container {
     position: relative;
+    text-decoration: none;
   }
   .joined__content {
     display: flex;
@@ -58,6 +63,7 @@
     height: 6.5rem;
     padding: 1rem 1rem 0.75rem;
     position: relative;
+    text-decoration: none;
   }
   .joined__title {
     color: white;
@@ -66,14 +72,19 @@
   }
   .joined__title h2 {
     font-weight: 400;
+    text-decoration: none;
+    color: white;
   }
   .joined__title h2:hover {
-    text-decoration: underline;
+    /* text-decoration: none; */
+    color: white;
   }
   .joined__owner {
     color: white;
     font-weight: 400 !important;
     font-size: 15px !important;
+    margin-top: 15px;
+    text-decoration:none; 
   }
   .joined__avatar {
     margin-right: 1rem !important; /* Adjust this value as needed */

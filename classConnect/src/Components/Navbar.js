@@ -120,6 +120,10 @@ function ResponsiveAppBar({ username,profileId }) {
               letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
+              '&:hover': {
+                color: 'white', // Change color on hover
+                textDecoration: 'none',
+              },
             }}
           >
             ClassConnect
@@ -177,6 +181,10 @@ function ResponsiveAppBar({ username,profileId }) {
               letterSpacing: '.1rem',
               color: 'inherit',
               textDecoration: 'none',
+              '&:hover': {
+                color: 'white', // Change color on hover
+                textDecoration: 'none',
+              },
             }}
           >
             ClassConnect
