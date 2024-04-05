@@ -98,7 +98,7 @@ function ResponsiveAppBar({ username,profileId }) {
   };
 
   const handleContactUs = () => {
-    history.push("/contactus");
+    history.push(`/contactus/${profileId}`);
     handleCloseUserMenu();
   };
 

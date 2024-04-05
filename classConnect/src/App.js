@@ -76,8 +76,8 @@ function App() {
           <Route exact path="/aboutus">
             <AboutUs />
           </Route>
-          <Route exact path="/contactus">
-            <ContactUs />
+          <Route exact path="/contactus/:profileId">
+            <ContactUs username={username} profileId={profileId}/>
           </Route>
         </Switch>
       </UserContextProvider>
