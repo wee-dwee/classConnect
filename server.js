@@ -201,7 +201,7 @@ app.post("/classes", async (req, res) => {
     // Check if the classcode is unique
     const existingClass = await Class.findOne({ classcode });
     if (existingClass) {
-      return res.status(400).json({ error: "Class code already exists" });
+      return res.status(400).json({ error: "Class with same code already exists" });
     }
 
     // Find the profile of the class owner
