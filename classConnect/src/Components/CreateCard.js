@@ -33,7 +33,7 @@ const CreateCard = ({ keyname, owner, classcode, isInstructor,profileId
           <div className="joined__imgWrapper" />
           <div className="joined__image" />
           <div className="joined__content">
-            <Link className="joined__title" to={"/profile"}>
+            <Link className="joined__title" to={"/main"}>
               <h2>{keyname}</h2>
             </Link>
             <p className="joined__owner">

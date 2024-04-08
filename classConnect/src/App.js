@@ -14,6 +14,7 @@ import Navbar from "./Components/Navbar";
 import CreateClassForm from "./Components/createclass";
 import JoinClassPage from "./Components/joinclass";
 import CreateCard from './Components/CreateCard.js';
+import Main from './Components/Main.js';
 
 function App() {
   const location = useLocation();
@@ -49,6 +50,9 @@ function App() {
           </Route>
           <Route exact path="/register">
             <Register />
+          </Route>
+          <Route exact path="/main">
+            <Main username={username} profileId={profileId}/>
           </Route>
           <Route exact path="/home/:profileId">
             <Home />
