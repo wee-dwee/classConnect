@@ -7,13 +7,33 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useParams } from "react-router-dom";
 
-export default function Main({ username, profileId }) {
+export default function Main({ username }) {
   const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInput] = useState("");
-  const [classname,setclassname]=useState("");
-  const [classoname,setclassoname]=useState("");
-  const [classjcode,setclassjcode]=useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [classname, setClassname] = useState("");
+  const [classoname, setClassoname] = useState("");
+  const [classjcode, setClassjcode] = useState("");
+  const [classoid, setClassoid] = useState("");
+  const [profile, setProfile] = useState(null); // State to hold profile details
   const { classId } = useParams();
+  const { profileId } = useParams();
+  const [checkisinst,setcheckisinst]=useState("");
+  useEffect(() => {
+    const fetchProfileDetails = async () => {
+      try {
+        const response = await fetch(`http://localhost:3002/profiles/${profileId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch profile details');
+        }
+        const data = await response.json();
+        setcheckisinst(data.isInstructor);
+      } catch (error) {
+        console.error('Error fetching profile details:', error);
+      }
+    };
+    fetchProfileDetails();
+  }, [profileId]);
+  console.log(checkisinst);
   useEffect(() => {
     const fetchClassDetails = async () => {
       try {
@@ -22,9 +42,10 @@ export default function Main({ username, profileId }) {
           throw new Error('Failed to fetch class details');
         }
         const data = await response.json();
-        setclassname(data.name);
-        setclassoname(data.owner.name);
-        setclassjcode(data.classcode);
+        setClassname(data.name);
+        setClassoname(data.owner.name);
+        setClassjcode(data.classcode);
+        setClassoid(data.owner._id);
       } catch (error) {
         console.error('Error fetching class details:', error);
       }
@@ -32,6 +53,32 @@ export default function Main({ username, profileId }) {
 
     fetchClassDetails();
   }, [classId]);
+
+  const handleAnnouncementSubmit = async () => {
+    try {
+      const response = await fetch(`http://localhost:3002/classes/${classId}/add-announcements`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: 'Announcement Title', // Change as needed
+          content: inputValue, // Use the input value
+          createdBy: classoid,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to add announcement');
+      }
+      // Clear input field and hide input
+      setInputValue("");
+      setShowInput(false);
+      // Reload announcements
+      // You can use a similar approach as fetching class details
+    } catch (error) {
+      console.error('Error adding announcement:', error);
+    }
+  };
 
   return (
     <>
@@ -68,16 +115,17 @@ export default function Main({ username, profileId }) {
                         label="Announce Something to Class"
                         variant="filled"
                         value={inputValue}
-                        onChange={(e) => setInput(e.target.value)} />
+                        onChange={(e) => setInputValue(e.target.value)} />
                       <div className="main__buttons">
-                        <input type="file" variant="outlined" color="primary" />
+                        <input type="file" variant="outlined" color="primary" multiple/>
                         <div>
-                          <Button onClick={() => setShowInput(false)} className="cancelbutton">
+                          <Button onClick={() => { setShowInput(false); setInputValue(""); }} className="cancelbutton">
                             Cancel
                           </Button>
                           <Button
                             color="primary"
                             variant="contained"
+                            onClick={handleAnnouncementSubmit} // Call the function to handle announcement submission
                           >
                             Post
                           </Button>
@@ -92,7 +140,7 @@ export default function Main({ username, profileId }) {
                   )}
                 </div>
               </div>
-              <Announcment />
+              <Announcment classId={classId}/>
             </div>
           </div>
         </div>

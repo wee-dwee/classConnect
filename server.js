@@ -55,58 +55,75 @@ const profileSchema = new mongoose.Schema({
 });
 
 
+const announcementSchema = new mongoose.Schema({
+  title: {
+      type: String,
+      required: true
+  },
+  content: {
+      type: String,
+      required: true
+  },
+  //image: String, // Add image property for the image URL
+  createdAt: {
+      type: Date,
+      default: Date.now
+  },
+  createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile'
+  }
+});
+
+const assignmentSchema = new mongoose.Schema({
+  title: {
+      type: String,
+      required: true
+  },
+  description: String,
+  dueDate: Date,
+  createdAt: {
+      type: Date,
+      default: Date.now
+  },
+  createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile'
+  }
+});
+
 const classSchema = new mongoose.Schema({
   name: {
-    type: String,
-    required: true
+      type: String,
+      required: true
   },
   owner: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile',
-    required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Profile',
+      required: true
   },
   bio: String,
   classcode: {
-    type: String,
-    required: true,
-    unique: true
+      type: String,
+      required: true,
+      unique: true
   },
   students: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Profile'
-  }],
-  announcements: [{
-    title: String,
-    content: String,
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Profile'
-    }
   }],
-  assignments: [{
-    title: String,
-    description: String,
-    dueDate: Date,
-    createdAt: {
-      type: Date,
-      default: Date.now
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile'
-    }
-  }]
+  announcements: [announcementSchema], // Use the announcement schema
+  assignments: [assignmentSchema] // Use the assignment schema
 });
+
 
 
 
 const User = mongoose.model("User", userSchema);
 const Profile = mongoose.model("Profile", profileSchema);
 const Class = mongoose.model("Class", classSchema);
+const Announcement = mongoose.model('Announcement', announcementSchema);
+const Assignment = mongoose.model('Assignment', assignmentSchema);
 
 // Get all profiles
 app.use(bodyParser.json());
@@ -316,71 +333,69 @@ app.get("/show-classes/:profileId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-
-// Add announcement
-app.post("/add-announcement/:classId", async (req, res) => {
+//--------------------------------------------------ANNOUNCEMENTS--------------------------------------------------
+app.get('/classes/:classId/announcements', async (req, res) => {
   try {
-    const classId = req.params.classId;
-    const { title, content, createdBy } = req.body;
+      const classId = req.params.classId;
 
-    // Check if class exists
-    const targetClass = await Class.findById(classId);
-    if (!targetClass) {
-      return res.status(404).json({ error: "Class not found" });
-    }
+      // Find the class by its ID and populate the announcements field and owner field
+      const foundClass = await Class.findById(classId)
+          .populate('announcements.createdBy', 'name email') // Populate createdBy field with Profile data
+          .populate('owner', 'name'); // Populate owner field with Profile data
 
-    // Create the announcement
-    const announcement = {
-      title,
-      content,
-      createdBy
-    };
+      if (!foundClass) {
+          return res.status(404).json({ message: 'Class not found' });
+      }
+      
+      // Map over the announcements and add the classOwner name to each announcement object
+      const announcementsWithClassOwner = foundClass.announcements.map(announcement => ({
+          ...announcement.toObject(),
+          classOwner: foundClass.owner.name // Add classOwner name to each announcement
+      }));
 
-    // Push the announcement to the class
-    targetClass.announcements.push(announcement);
-    await targetClass.save();
-
-    res.status(201).json({ message: "Announcement added successfully" });
+      res.json(announcementsWithClassOwner); // Return the announcements along with classOwner name
   } catch (error) {
-    console.error("Error adding announcement:", error);
-    res.status(500).json({ error: "Internal server error" });
+      console.error('Error fetching announcements:', error);
+      res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-// Add assignment
-app.post("/add-assignment/:classId", async (req, res) => {
+// Endpoint to add an announcement to a class
+app.post('/classes/:classId/add-announcements', async (req, res) => {
+  const classId = req.params.classId;
+  const { title, content, createdBy} = req.body; // Add image from the request body
+  console.log(title);
+  console.log(content);
+  console.log(createdBy);
   try {
-    const classId = req.params.classId;
-    const { title, description, dueDate, createdBy } = req.body;
+      // Create a new announcement
+      const newAnnouncement = new Announcement({
+          title,
+          content,
+          createdBy,
+      });
+      await newAnnouncement.save();
+      // Find the class by its ID and push the new announcement
+      const updatedClass = await Class.findByIdAndUpdate(
+          classId,
+          {
+              $push: {
+                  announcements: newAnnouncement
+              }
+          },
+          { new: true }
+      ).populate('announcements.createdBy', 'name email'); // Populate createdBy field with Profile data
 
-    // Check if class exists
-    const targetClass = await Class.findById(classId);
-    if (!targetClass) {
-      return res.status(404).json({ error: "Class not found" });
-    }
+      if (!updatedClass) {
+          return res.status(404).json({ message: 'Class not found' });
+      }
 
-    // Create the assignment
-    const assignment = {
-      title,
-      description,
-      dueDate,
-      createdBy
-    };
-
-    // Push the assignment to the class
-    targetClass.assignments.push(assignment);
-    await targetClass.save();
-
-    res.status(201).json({ message: "Assignment added successfully" });
+      res.status(201).json(updatedClass);
   } catch (error) {
-    console.error("Error adding assignment:", error);
-    res.status(500).json({ error: "Internal server error" });
+      console.error('Error adding announcement:', error);
+      res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-
-
-
 //--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
 app.post("/api/register", async (req, res) => {
   try {

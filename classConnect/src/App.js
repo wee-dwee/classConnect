@@ -42,6 +42,8 @@ function App() {
   const setuserclassIdFromClasses = useCallback((enteredClassId) => {
     setuserclassId(enteredClassId);
   }, []);
+  console.log(profileId);
+  console.log("prof");
   return (
     <div>
       <UserContextProvider>
@@ -55,8 +57,8 @@ function App() {
           <Route exact path="/register">
             <Register />
           </Route>
-          <Route exact path="/main/:classId">
-            <Main username={username} profileId={profileId}/>
+          <Route exact path="/main/:classId/:profileId">
+            <Main username={username} />
           </Route>
           <Route exact path="/home/:profileId">
             <Home setuserclassId={setuserclassIdFromClasses} />
