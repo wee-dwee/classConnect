@@ -14,7 +14,7 @@
 }
 
 .footer {
-  position: relative;
+  position: sticky;
   width: 100vw;
   background: #3586ff;
   min-height: 20px;
@@ -24,6 +24,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  
 }
 
 

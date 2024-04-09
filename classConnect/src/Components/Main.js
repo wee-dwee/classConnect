@@ -2,8 +2,7 @@ import React from 'react';
 import {useState} from 'react'
 import './mainstyle.css';
 import Navbar from './Navbar';
-import AppBar from '@mui/material/AppBar';
-import Footer from './Footer';
+import Announcment from './Announcment.js';
 // import { Avatar, Button, TextField } from "@material-ui/core";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -27,9 +26,9 @@ export default function Main({username,profileId}) {
               <div className="main__emptyStyles" />
             </div>
             <div className="main__text">
-              <h1 className="main__heading main__overflow">
+              <h4 className="main__heading main__overflow">
                 Database Management System
-              </h1>
+              </h4>
               <div className="main__section main__overflow">
                 P.M Jatt
               </div>
@@ -77,11 +76,11 @@ export default function Main({username,profileId}) {
                 
               </div>
             </div>
+            <Announcment />
           </div>
         </div>
       </div>
     </div>
-  <Footer />
     </>
     
   )

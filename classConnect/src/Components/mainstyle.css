@@ -46,7 +46,7 @@
   }
   .main__heading {
     font-family: "Google Sans", Roboto, Arial, sans-serif;
-    font-size: 2.25rem;
+    font-size: 2.rem;
     font-weight: 500;
     line-height: 2.75rem;
     color: #fff;
@@ -124,7 +124,7 @@
     margin-right: 20px;
   }
   #filled-multiline-flexible {
-    width: 50vw !important;
+    width: 890px;
     height: 20vh !important;
   }
   .main__form {
@@ -147,17 +147,32 @@
     .main__ancContent {
       width: 92vw;
     }
+    #filled-multiline-flexible{
+      width: 82vw;
+    }
   }
 
   @media only screen and (max-width: 750px) {
     .main__ancContent {
       width: 90vw;
     }
+    #filled-multiline-flexible{
+      width:77vw;
+    }
   }
 
-  @media only screen and (max-width: 600px) {
+  @media only screen and (max-width: 650px) {
     .main__ancContent {
       width: 88vw;
+    }
+    .main__announcementsWrapper{
+      width: 88vw;
+    }
+    .main__heading{
+      font-size: 2.rem;
+    }
+    #filled-multiline-flexible{
+      width: 72vw;
     }
   }
   
