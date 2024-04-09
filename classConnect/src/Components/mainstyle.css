@@ -135,7 +135,7 @@
   .main__buttons {
     display: flex;
     justify-content: space-between;
-    width: 50vw;
+    width: 890px;
     margin-top: 20px;
   }
   @media only screen and (max-width: 842px) {
@@ -150,6 +150,10 @@
     #filled-multiline-flexible{
       width: 82vw;
     }
+    .main__buttons
+    {
+      width: 82vw;
+    }
   }
 
   @media only screen and (max-width: 750px) {
@@ -158,6 +162,10 @@
     }
     #filled-multiline-flexible{
       width:77vw;
+    }
+    .main__buttons
+    {
+      width: 77vw;
     }
   }
 
@@ -172,6 +180,10 @@
       font-size: 2.rem;
     }
     #filled-multiline-flexible{
+      width: 72vw;
+    }
+    .main__buttons
+    {
       width: 72vw;
     }
   }
