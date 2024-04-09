@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import "./style.css";
 import teacher from './teacher.png';
 
-const CreateCard = ({ keyname, owner, classcode, isInstructor,profileId
- }) => {
+const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId, setuserclassId }) => {
   const [userProfile, setUserProfile] = useState(null);
-  const [checkin,setcheckin]=useState(false);
+  const [checkin, setCheckin] = useState(false);
+  
   useEffect(() => {
     // Fetch user profile when component mounts
     fetchUserProfile(profileId);
@@ -20,12 +20,18 @@ const CreateCard = ({ keyname, owner, classcode, isInstructor,profileId
       const response = await fetch(`http://localhost:3002/profiles/${profileId}`);
       const data = await response.json();
       console.log(data.image);
-      setcheckin(isInstructor); // Update checkin state with fetched data
+      setCheckin(isInstructor); // Update checkin state with fetched data
       setUserProfile(data); // Update userProfile state with fetched data
     } catch (error) {
       console.error('Error fetching user profile:', error);
     }
   };
+
+  const handleClassSelection = () => {
+    // Assuming you want to set the user class id when the class is selected
+    setuserclassId(profileId);
+  };
+
   return (
     <div className="joined__list">
       <div className="joined__wrapper">
@@ -33,8 +39,8 @@ const CreateCard = ({ keyname, owner, classcode, isInstructor,profileId
           <div className="joined__imgWrapper" />
           <div className="joined__image" />
           <div className="joined__content">
-            <Link className="joined__title" to={"/main"}>
-              <h2>{keyname}</h2>
+            <Link className="joined__title" to={`/main/${classId}`} onClick={handleClassSelection}>
+              <h2>{title}</h2>
             </Link>
             <p className="joined__owner">
               {isInstructor ? classcode : owner}
@@ -42,11 +48,10 @@ const CreateCard = ({ keyname, owner, classcode, isInstructor,profileId
           </div>
         </div>
         {userProfile && userProfile.image ? (
-              <img src={`http://localhost:3002/uploads/${userProfile.image}`} alt="Default Student Image" className="joined__avatar" />
-                ) : (
-                  <img src={teacher} alt="Default Student Image" className="joined__avatar" />
-                )}
-        
+          <img src={`http://localhost:3002/uploads/${userProfile.image}`} alt="Default Student Image" className="joined__avatar" />
+        ) : (
+          <img src={teacher} alt="Default Student Image" className="joined__avatar" />
+        )}
       </div>
       <div>
       </div>

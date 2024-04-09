@@ -6,7 +6,7 @@ import Footer from './Footer.js';
 import Navbar from './Navbar.js';
 import CreateCard from './CreateCard.js';
 
-function Home() {
+function Home({setuserclassId}) {
   const [profile, setProfile] = useState({});
   const [createdClasses, setCreatedClasses] = useState([]);
   const location = useLocation();
@@ -27,6 +27,11 @@ function Home() {
     fetchData();
   }, [profileId]);
 
+  // Function to handle class selection
+  const handleClassSelection = (classId) => {
+    setuserclassId(classId);
+  };
+
   return (
     <>
       <Navbar username={profile.email} profileId={profileId} />
@@ -34,12 +39,29 @@ function Home() {
         {profile.isInstructor ? (
           // If the user is an instructor, display classes taught by the instructor
           createdClasses.map((classItem) => (
-            <CreateCard keyname={classItem.name} title={classItem.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} profileId={profileId}/>
+            <CreateCard 
+            classId={classItem._id} 
+              title={classItem.name} 
+              classcode={classItem.classcode} 
+              isInstructor={profile.isInstructor} 
+              profileId={profileId}
+              onSelectClass={() => handleClassSelection(classItem._id)} // Pass onSelectClass function to handle class selection
+              setuserclassId={setuserclassId}
+            />
           ))
         ) : (
           // If the user is a student, display classes joined by the student
           createdClasses.map((classItem) => (
-            <CreateCard keyname={classItem.name} title={classItem.name} owner={classItem.owner.name} classcode={classItem.classcode} isInstructor={profile.isInstructor} profileId={classItem.owner._id}/>
+            <CreateCard 
+            classId={classItem._id} 
+              title={classItem.name} 
+              owner={classItem.owner.name} 
+              classcode={classItem.classcode} 
+              isInstructor={profile.isInstructor} 
+              profileId={classItem.owner._id} 
+              onSelectClass={() => handleClassSelection(classItem._id)} // Pass onSelectClass function to handle class selection
+              setuserclassId={setuserclassId}
+            />
           ))
         )}
       </ol>

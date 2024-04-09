@@ -20,6 +20,7 @@ function App() {
   const location = useLocation();
   const [username, setUsername] = useState("");
   const [profileId, setProfileId] = useState("");
+  const [classId,setuserclassId]=useState("");
   const createdClasses = [
     { id: 1, title: "Class 1", owner: "owner1@example.com" },
     { id: 2, title: "Class 2", owner: "owner2@example.com" },
@@ -38,6 +39,9 @@ function App() {
   const setProfileFromLoginForm = useCallback((enteredProfile) => {
     setProfileId(enteredProfile);
   }, []);
+  const setuserclassIdFromClasses = useCallback((enteredClassId) => {
+    setuserclassId(enteredClassId);
+  }, []);
   return (
     <div>
       <UserContextProvider>
@@ -51,11 +55,11 @@ function App() {
           <Route exact path="/register">
             <Register />
           </Route>
-          <Route exact path="/main">
+          <Route exact path="/main/:classId">
             <Main username={username} profileId={profileId}/>
           </Route>
           <Route exact path="/home/:profileId">
-            <Home />
+            <Home setuserclassId={setuserclassIdFromClasses} />
           </Route>
           <Route exact path="/createclass/:profileId">
             <CreateClassForm username={username} profileId={profileId}/>

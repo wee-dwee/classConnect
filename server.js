@@ -193,6 +193,19 @@ app.get("/classes/:profileid", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.get("/classesbyId/:classId", async (req, res) => {
+  try {
+    const { classId } = req.params;
+
+    // Assuming you want to find classes owned by a specific user
+    const classes = await Class.findOne({ _id:classId}).populate('owner');
+
+    res.json(classes);
+  } catch (error) {
+    console.error("Error fetching classes:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 app.post("/classes", async (req, res) => {
   try {
     // Extract class details from the request body
