@@ -56,17 +56,28 @@ export default function Main({ username }) {
 
   const handleAnnouncementSubmit = async () => {
     try {
+      // Get the file input element
+      const fileInput = document.getElementById('fileInput');
+      // Get the selected files
+      const files = fileInput.files;
+  
+      // Create a FormData object to send files along with other data
+      const formData = new FormData();
+      formData.append('title', 'Announcement Title'); // Change as needed
+      formData.append('content', inputValue); // Use the input value
+      formData.append('createdBy', classoid);
+      
+      // Append each selected file to the FormData object
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files', files[i]);
+      }
+  
+      // Send the data to the server
       const response = await fetch(`http://localhost:3002/classes/${classId}/add-announcements`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          title: 'Announcement Title', // Change as needed
-          content: inputValue, // Use the input value
-          createdBy: classoid,
-        }),
+        body: formData,
       });
+  
       if (!response.ok) {
         throw new Error('Failed to add announcement');
       }
@@ -79,6 +90,7 @@ export default function Main({ username }) {
       console.error('Error adding announcement:', error);
     }
   };
+  
 
   return (
     <>
@@ -122,7 +134,7 @@ export default function Main({ username }) {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)} />
                       <div className="main__buttons">
-                        <input type="file" variant="outlined" color="primary" multiple/>
+                        <input type="file" id='fileInput' variant="outlined" color="primary" multiple/>
                         <div>
                           <Button onClick={() => { setShowInput(false); setInputValue(""); }} className="cancelbutton">
                             Cancel
@@ -143,6 +155,7 @@ export default function Main({ username }) {
                       <div>Announce Something to Class</div>
                     </div>
                   )}
+                  
                 </div>
               </div>
               <Announcment classId={classId}/>

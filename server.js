@@ -64,7 +64,6 @@ const announcementSchema = new mongoose.Schema({
       type: String,
       required: true
   },
-  //image: String, // Add image property for the image URL
   createdAt: {
       type: Date,
       default: Date.now
@@ -72,8 +71,10 @@ const announcementSchema = new mongoose.Schema({
   createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Profile'
-  }
+  },
+  files: [String] // Array of strings named 'files'
 });
+
 
 const assignmentSchema = new mongoose.Schema({
   title: {
@@ -112,8 +113,8 @@ const classSchema = new mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Profile'
   }],
-  announcements: [announcementSchema], // Use the announcement schema
-  assignments: [assignmentSchema] // Use the assignment schema
+  announcements: [announcementSchema], 
+  assignments: [assignmentSchema] 
 });
 
 
@@ -361,39 +362,40 @@ app.get('/classes/:classId/announcements', async (req, res) => {
 });
 
 // Endpoint to add an announcement to a class
-app.post('/classes/:classId/add-announcements', async (req, res) => {
+app.post('/classes/:classId/add-announcements', upload.array('files'), async (req, res) => {
   const classId = req.params.classId;
-  const { title, content, createdBy} = req.body; // Add image from the request body
-  console.log(title);
-  console.log(content);
-  console.log(createdBy);
+  const { title, content, createdBy } = req.body; // Extract announcement details from the request body
+  const files = req.files.map(file => file.originalname); // Extract filenames from the request files
+  files.forEach(element => {
+      console.log(element);
+  });
   try {
-      // Create a new announcement
-      const newAnnouncement = new Announcement({
-          title,
-          content,
-          createdBy,
-      });
-      await newAnnouncement.save();
-      // Find the class by its ID and push the new announcement
-      const updatedClass = await Class.findByIdAndUpdate(
-          classId,
-          {
-              $push: {
-                  announcements: newAnnouncement
-              }
-          },
-          { new: true }
-      ).populate('announcements.createdBy', 'name email'); // Populate createdBy field with Profile data
+    // Create a new announcement object including the filenames
+    const newAnnouncement = {
+      title,
+      content,
+      createdBy,
+      files: files // Include the filenames in the announcement object
+    };
 
-      if (!updatedClass) {
-          return res.status(404).json({ message: 'Class not found' });
-      }
+    // Create a new announcement document in the database
+    const announcement = await Announcement.create(newAnnouncement);
 
-      res.status(201).json(updatedClass);
+    // Find the class by its ID and push the new announcement
+    const updatedClass = await Class.findByIdAndUpdate(
+      classId,
+      { $push: { announcements: announcement } },
+      { new: true }
+    ).populate('announcements.createdBy', 'name email'); // Populate createdBy field with Profile data
+
+    if (!updatedClass) {
+      return res.status(404).json({ message: 'Class not found' });
+    }
+
+    res.status(201).json(updatedClass); // Return the updated class with the new announcement
   } catch (error) {
-      console.error('Error adding announcement:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    console.error('Error adding announcement:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 //--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
