@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import "./style.css";
 import teacher from './teacher.png';
 
-const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId, setuserclassId }) => {
+const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId, setuserclassId,thisprofileId }) => {
   const [userProfile, setUserProfile] = useState(null);
   const [checkin, setCheckin] = useState(false);
   
@@ -39,7 +39,7 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
           <div className="joined__imgWrapper" />
           <div className="joined__image" />
           <div className="joined__content">
-            <Link className="joined__title" to={`/main/${classId}/${profileId}`} onClick={handleClassSelection}>
+            <Link className="joined__title" to={`/main/${classId}/${thisprofileId}`} onClick={handleClassSelection}>
               <h2>{title}</h2>
             </Link>
             <p className="joined__owner">

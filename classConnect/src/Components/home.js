@@ -26,7 +26,7 @@ function Home({setuserclassId}) {
 
     fetchData();
   }, [profileId]);
-
+  console.log(profile.isInstructor);
   // Function to handle class selection
   const handleClassSelection = (classId) => {
     setuserclassId(classId);
@@ -45,6 +45,7 @@ function Home({setuserclassId}) {
               classcode={classItem.classcode} 
               isInstructor={profile.isInstructor} 
               profileId={profileId}
+              thisprofileId={profileId}
               onSelectClass={() => handleClassSelection(classItem._id)} // Pass onSelectClass function to handle class selection
               setuserclassId={setuserclassId}
             />
@@ -58,7 +59,8 @@ function Home({setuserclassId}) {
               owner={classItem.owner.name} 
               classcode={classItem.classcode} 
               isInstructor={profile.isInstructor} 
-              profileId={classItem.owner._id} 
+              profileId={classItem.owner._id}
+              thisprofileId={profile._id} 
               onSelectClass={() => handleClassSelection(classItem._id)} // Pass onSelectClass function to handle class selection
               setuserclassId={setuserclassId}
             />
