@@ -23,6 +23,22 @@ export default function Announcement({ classId }) {
         }
     };
 
+    const renderFilePreview = (file) => {
+        const extension = file.split('.').pop().toLowerCase();
+        switch (extension) {
+            // case 'pdf':
+            //     return (
+            //         <div>
+            //             <a href={`http://localhost:3002/uploads/${file}`} download={file}>{file}</a>
+            //         </div>
+            //     );
+            
+            default:
+                return <a href={`http://localhost:3002/uploads/${file}`} download={file}>{file}</a>;
+        }
+    };
+    
+
     return (
         <div>
             {announcements.slice().reverse().map((announcement, index) => (
@@ -34,7 +50,11 @@ export default function Announcement({ classId }) {
                             <div className="dateandtime">{new Date(announcement.createdAt).toLocaleString()}</div> {/* Display date and time */}
                         </div>
                         <p className="amt__txt">{announcement.content}</p>
-                        <img className="amt__img" src={announcement.image || student} alt="No image" />
+                        {announcement.files && announcement.files.map((file, idx) => (
+                            <div key={idx} className="file-preview">
+                                {renderFilePreview(file)}
+                            </div>
+                        ))}
                     </div>
                 </div>
             ))}

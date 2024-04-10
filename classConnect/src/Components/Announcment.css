@@ -14,7 +14,7 @@
     margin-left: 10px;
   }
   .dateandtime{
-    margin-left: 65%;
+    margin-left: 63%;
   }
   .amt__Cnt {
     padding: 0.5rem 0;
@@ -37,37 +37,37 @@
 
   @media only screen and (max-width: 1030px){
     .dateandtime{
-      margin-left: 60%;
+      margin-left: 58%;
     }
   }
   @media only screen and (max-width: 910px){
     .dateandtime{
-      margin-left: 55%;
+      margin-left: 53%;
     }
   }
   @media only screen and (max-width: 800px){
     .dateandtime{
-      margin-left: 50%;
+      margin-left: 48%;
     }
   }
   @media only screen and (max-width: 740px){
     .dateandtime{
-      margin-left: 45%;
+      margin-left: 43%;
     }
   }
   @media only screen and (max-width: 670px){
     .dateandtime{
-      margin-left: 40%;
+      margin-left: 38%;
     }
   }
   @media only screen and (max-width: 630px){
     .dateandtime{
-      margin-left: 30%;
+      margin-left: 28%;
     }
   }
   @media only screen and (max-width: 540px){
     .dateandtime{
-      margin-left: 25%;
+      margin-left: 21%;
     }
   }
   
