@@ -48,83 +48,82 @@ const profileSchema = new mongoose.Schema({
   bio: String,
   image: String,
   isInstructor: Boolean,
-  joinedClasses: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Class'
-  }]
+  joinedClasses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Class",
+    },
+  ],
 });
-
 
 const announcementSchema = new mongoose.Schema({
   title: {
-      type: String,
-      required: true
+    type: String,
+    required: true,
   },
   content: {
-      type: String,
-      required: true
+    type: String,
+    required: true,
   },
   createdAt: {
-      type: Date,
-      default: Date.now
+    type: Date,
+    default: Date.now,
   },
   createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile'
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profile",
   },
-  files: [String] // Array of strings named 'files'
+  files: [String], // Array of strings named 'files'
 });
-
 
 const assignmentSchema = new mongoose.Schema({
   title: {
-      type: String,
-      required: true
+    type: String,
+    required: true,
   },
   description: String,
   dueDate: Date,
   createdAt: {
-      type: Date,
-      default: Date.now
+    type: Date,
+    default: Date.now,
   },
   createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile'
-  }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profile",
+  },
 });
 
 const classSchema = new mongoose.Schema({
   name: {
-      type: String,
-      required: true
+    type: String,
+    required: true,
   },
   owner: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile',
-      required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profile",
+    required: true,
   },
   bio: String,
   classcode: {
-      type: String,
-      required: true,
-      unique: true
+    type: String,
+    required: true,
+    unique: true,
   },
-  students: [{
+  students: [
+    {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Profile'
-  }],
-  announcements: [announcementSchema], 
-  assignments: [assignmentSchema] 
+      ref: "Profile",
+    },
+  ],
+  announcements: [announcementSchema],
+  assignments: [assignmentSchema],
 });
-
-
-
 
 const User = mongoose.model("User", userSchema);
 const Profile = mongoose.model("Profile", profileSchema);
 const Class = mongoose.model("Class", classSchema);
-const Announcement = mongoose.model('Announcement', announcementSchema);
-const Assignment = mongoose.model('Assignment', assignmentSchema);
+const Announcement = mongoose.model("Announcement", announcementSchema);
+const Assignment = mongoose.model("Assignment", assignmentSchema);
 
 // Get all profiles
 app.use(bodyParser.json());
@@ -202,7 +201,7 @@ app.get("/classes/:profileid", async (req, res) => {
     const { profileid } = req.params;
 
     // Assuming you want to find classes owned by a specific user
-    const profile_ins=await Profile.find({_id:profileid});
+    const profile_ins = await Profile.find({ _id: profileid });
     const classes = await Class.find({ OwnerUser: profile_ins.email });
 
     res.json(classes);
@@ -216,7 +215,7 @@ app.get("/classesbyId/:classId", async (req, res) => {
     const { classId } = req.params;
 
     // Assuming you want to find classes owned by a specific user
-    const classes = await Class.findOne({ _id:classId}).populate('owner');
+    const classes = await Class.findOne({ _id: classId }).populate("owner");
 
     res.json(classes);
   } catch (error) {
@@ -232,7 +231,9 @@ app.post("/classes", async (req, res) => {
     // Check if the classcode is unique
     const existingClass = await Class.findOne({ classcode });
     if (existingClass) {
-      return res.status(400).json({ error: "Class with same code already exists" });
+      return res
+        .status(400)
+        .json({ error: "Class with same code already exists" });
     }
 
     // Find the profile of the class owner
@@ -280,7 +281,7 @@ app.post("/join-class", async (req, res) => {
     if (!studentProfile) {
       return res.status(404).json({ error: "Student profile not found" });
     }
-    
+
     // Check if the user is an instructor
     if (studentProfile.isInstructor) {
       return res.status(400).json({ error: "You are an instructor" });
@@ -288,7 +289,9 @@ app.post("/join-class", async (req, res) => {
 
     // Check if the student is already added to the class
     if (classObj.students.includes(profileId)) {
-      return res.status(400).json({ error: "You are already added to the class" });
+      return res
+        .status(400)
+        .json({ error: "You are already added to the class" });
     }
 
     // Add the student to the class
@@ -299,7 +302,9 @@ app.post("/join-class", async (req, res) => {
     studentProfile.joinedClasses.push(classObj._id);
     await studentProfile.save();
 
-    res.status(200).json({ message: "You are added to the class successfully" });
+    res
+      .status(200)
+      .json({ message: "You are added to the class successfully" });
   } catch (error) {
     console.error("Error adding student to class:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -325,7 +330,7 @@ app.get("/show-classes/:profileId", async (req, res) => {
       classes = await Class.find({ owner: profileId });
     } else {
       // If the profile is a student, find classes joined by the student and populate the owner field
-      classes = await Class.find({ students: profileId }).populate('owner');
+      classes = await Class.find({ students: profileId }).populate("owner");
     }
 
     res.status(200).json({ profile, classes });
@@ -335,69 +340,102 @@ app.get("/show-classes/:profileId", async (req, res) => {
   }
 });
 //--------------------------------------------------ANNOUNCEMENTS--------------------------------------------------
-app.get('/classes/:classId/announcements', async (req, res) => {
+app.get("/classes/:classId/announcements", async (req, res) => {
   try {
-      const classId = req.params.classId;
+    const classId = req.params.classId;
 
-      // Find the class by its ID and populate the announcements field and owner field
-      const foundClass = await Class.findById(classId)
-          .populate('announcements.createdBy', 'name email') // Populate createdBy field with Profile data
-          .populate('owner', 'name'); // Populate owner field with Profile data
+    // Find the class by its ID and populate the announcements field and owner field
+    const foundClass = await Class.findById(classId)
+      .populate("announcements.createdBy", "name email") // Populate createdBy field with Profile data
+      .populate("owner", "name"); // Populate owner field with Profile data
 
-      if (!foundClass) {
-          return res.status(404).json({ message: 'Class not found' });
-      }
-      
-      // Map over the announcements and add the classOwner name to each announcement object
-      const announcementsWithClassOwner = foundClass.announcements.map(announcement => ({
-          ...announcement.toObject(),
-          classOwner: foundClass.owner.name // Add classOwner name to each announcement
-      }));
+    if (!foundClass) {
+      return res.status(404).json({ message: "Class not found" });
+    }
+    const {students} = foundClass.students;
+    
+    // Map over the announcements and add the classOwner name to each announcement object
+    const announcementsWithClassOwner = foundClass.announcements.map(
+      (announcement) => ({
+        ...announcement.toObject(),
+        classOwner: foundClass.owner.name, // Add classOwner name to each announcement
+      })
+    );
 
-      res.json(announcementsWithClassOwner); // Return the announcements along with classOwner name
+    res.json(announcementsWithClassOwner); // Return the announcements along with classOwner name
   } catch (error) {
-      console.error('Error fetching announcements:', error);
-      res.status(500).json({ message: 'Internal server error' });
+    console.error("Error fetching announcements:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
 // Endpoint to add an announcement to a class
-app.post('/classes/:classId/add-announcements', upload.array('files'), async (req, res) => {
-  const classId = req.params.classId;
-  const { title, content, createdBy } = req.body; // Extract announcement details from the request body
-  const files = req.files.map(file => file.originalname); // Extract filenames from the request files
-  files.forEach(element => {
-      console.log(element);
-  });
-  try {
-    // Create a new announcement object including the filenames
-    const newAnnouncement = {
-      title,
-      content,
-      createdBy,
-      files: files // Include the filenames in the announcement object
-    };
+app.post(
+  "/classes/:classId/add-announcements",
+  upload.array("files"),
+  async (req, res) => {
+    const classId = req.params.classId;
+    const { title, content, createdBy } = req.body; // Extract announcement details from the request body
+    const files = req.files.map((file) => file.originalname); // Extract filenames from the request files
+    
+    try {
+      // Create a new announcement object including the filenames
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL,
+          pass: process.env.PASSWORD,
+        },
+        secure: false,
+      });
+      const newAnnouncement = {
+        title,
+        content,
+        createdBy,
+        files: files, // Include the filenames in the announcement object
+      };
 
-    // Create a new announcement document in the database
-    const announcement = await Announcement.create(newAnnouncement);
+      // Create a new announcement document in the database
+      const announcement = await Announcement.create(newAnnouncement);
 
-    // Find the class by its ID and push the new announcement
-    const updatedClass = await Class.findByIdAndUpdate(
-      classId,
-      { $push: { announcements: announcement } },
-      { new: true }
-    ).populate('announcements.createdBy', 'name email'); // Populate createdBy field with Profile data
+      // Find the class by its ID and push the new announcement
+      const updatedClass = await Class.findByIdAndUpdate(
+        classId,
+        { $push: { announcements: announcement } },
+        { new: true }
+      ).populate("announcements.createdBy", "name email"); // Populate createdBy field with Profile data
+      
+      const studentIds = updatedClass.students;
+      const owner = await Profile.findById(updatedClass.owner);
+      if (!updatedClass) {
+        return res.status(404).json({ message: "Class not found" });
+      }
 
-    if (!updatedClass) {
-      return res.status(404).json({ message: 'Class not found' });
+      // Fetch student documents and extract emails
+      const students = await Profile.find({ _id: { $in: studentIds } });
+      const studentEmails = students.map(student => student.email);
+
+      // Send email to each student
+      studentEmails.forEach(async (email) => {
+        const mailOptions = {
+          from: process.env.EMAIL,
+          to: email,
+          subject: 'New Announcement in Your Class',
+          text: `Hello,\n\nA new announcement has been posted in your class ${updatedClass.name}.\n\n${content}\n\nRegards,\n${owner.name}`
+        };
+        
+        // Send the email
+        await transporter.sendMail(mailOptions);
+        console.log(`Email sent to ${email}`);
+      });
+
+      res.status(201).json(updatedClass); // Return the updated class with the new announcement
+    } catch (error) {
+      console.error("Error adding announcement:", error);
+      res.status(500).json({ message: "Internal server error" });
     }
-
-    res.status(201).json(updatedClass); // Return the updated class with the new announcement
-  } catch (error) {
-    console.error('Error adding announcement:', error);
-    res.status(500).json({ message: 'Internal server error' });
   }
-});
+);
 //--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
 app.post("/api/register", async (req, res) => {
   try {
@@ -568,7 +606,6 @@ app.post("/api/send-otp", async (req, res) => {
 });
 // Update profile by username
 
-
 app.post("/api/verify-otp", async (req, res) => {
   const { otp, mailOTP } = req.body;
   try {
@@ -606,26 +643,25 @@ app.post(
     }
   }
 );
-app.post("/remove-image/:username",async (req,res)=>{
-  try{
+app.post("/remove-image/:username", async (req,res)=>{
+  try {
     const email = req.params.username;
     const profile = await Profile.findOneAndUpdate(
-      {email:email},
-      {image:null}
+      { email:email },
+      { image:null }
     );
-    if(!profile)
+    if (!profile) 
     {
-      return res.status(404).json({error:"Profile not found"});
+      return res.status(404).json({ error: "Profile not found" });
     }
-    return res.json({message:"Image uploaded successfully",profile});
+    return res.json({ message: "Image uploaded successfully", profile });
   } 
-  catch(error){
-    console.error("Error removing error:",error);
-    return res.status(500).json({error:"Internal Server Error"});
+  catch (error) {
+    console.error("Error removing error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-    
-
-})
+  
+});
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
