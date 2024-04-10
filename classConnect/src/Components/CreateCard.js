@@ -8,9 +8,9 @@ import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
+
 const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId, setuserclassId, thisprofileId }) => {
   const [userProfile, setUserProfile] = useState(null);
-  const [checkin, setCheckin] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
 
@@ -21,27 +21,45 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   useEffect(() => {
-    // Fetch user profile when component mounts
     fetchUserProfile(profileId);
   }, [profileId]);
 
   const fetchUserProfile = async (profileId) => {
     try {
-      // Assuming you have an API endpoint to fetch user profile data
       const response = await fetch(`http://localhost:3002/profiles/${profileId}`);
       const data = await response.json();
-      console.log(data.image);
-      setCheckin(isInstructor); // Update checkin state with fetched data
-      setUserProfile(data); // Update userProfile state with fetched data
+      setUserProfile(data);
     } catch (error) {
       console.error('Error fetching user profile:', error);
     }
   };
 
   const handleClassSelection = () => {
-    // Assuming you want to set the user class id when the class is selected
     setuserclassId(profileId);
+  };
+
+  const handleUnenroll = async () => {
+    try {
+      const response = await fetch('http://localhost:3002/unenroll-class', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          classId: classId,
+          profileId: thisprofileId,
+        }),
+      });
+      const data = await response.json();
+      console.log(data.message); // Log the response message
+      // You may want to perform additional actions here, such as updating UI or state
+    } catch (error) {
+      console.error('Error unenrolling from class:', error);
+    } finally {
+      handleClose(); // Close the menu regardless of success or failure
+    }
   };
 
   return (
@@ -66,7 +84,7 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
             open={open}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>Unenroll</MenuItem>
+            <MenuItem onClick={handleUnenroll}>Unenroll</MenuItem>
           </Menu>
         </div>
         <div className="joined__container">

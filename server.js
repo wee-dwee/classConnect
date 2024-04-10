@@ -305,7 +305,46 @@ app.post("/join-class", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.post("/unenroll-class", async (req, res) => {
+  try {
+    const { classId, profileId } = req.body;
+    
+    // Find the class by ID
+    const classObj = await Class.findById(classId);
+    if (!classObj) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+    
+    // Find the student profile by ID
+    const studentProfile = await Profile.findById(profileId);
+    if (!studentProfile) {
+      return res.status(404).json({ error: "Student profile not found" });
+    }
+    console.log(studentProfile);
+    // Check if the user is an instructor
+    if (studentProfile.isInstructor) {
+      return res.status(400).json({ error: "Instructors cannot unenroll from classes" });
+    }
 
+    // Check if the student is not enrolled in the class
+    if (!classObj.students.includes(profileId)) {
+      return res.status(400).json({ error: "You are not enrolled in this class" });
+    }
+
+    // Remove the student from the class
+    classObj.students = classObj.students.filter(id => id !== profileId);
+    await classObj.save();
+
+    // Remove the class from the student's joinedClasses array
+    studentProfile.joinedClasses = studentProfile.joinedClasses.filter(id => id !== classId);
+    await studentProfile.save();
+
+    res.status(200).json({ message: "You have been unenrolled from the class successfully" });
+  } catch (error) {
+    console.error("Error unenrolling student from class:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 // Assuming you're using Express.js
 
 app.get("/show-classes/:profileId", async (req, res) => {
