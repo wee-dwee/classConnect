@@ -325,7 +325,7 @@ app.post("/unenroll-class", async (req, res) => {
     if (!studentProfile) {
       return res.status(404).json({ error: "Student profile not found" });
     }
-    console.log(studentProfile);
+    
     // Check if the user is an instructor
     if (studentProfile.isInstructor) {
       return res.status(400).json({ error: "Instructors cannot unenroll from classes" });
@@ -337,12 +337,9 @@ app.post("/unenroll-class", async (req, res) => {
     }
 
     // Remove the student from the class
-    classObj.students = classObj.students.filter(id => id !== profileId);
-    await classObj.save();
-
+    await Class.findByIdAndUpdate(classId, { $pull: { students: profileId } });
     // Remove the class from the student's joinedClasses array
-    studentProfile.joinedClasses = studentProfile.joinedClasses.filter(id => id !== classId);
-    await studentProfile.save();
+    await Profile.findByIdAndUpdate(profileId, { $pull: { joinedClasses: classId } });
 
     res.status(200).json({ message: "You have been unenrolled from the class successfully" });
   } catch (error) {

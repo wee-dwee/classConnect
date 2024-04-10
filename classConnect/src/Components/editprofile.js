@@ -31,7 +31,7 @@ export default function EditProfile() {
         setError(error);
         setIsLoading(false);
       });
-  }, [name]);
+  }, [profileId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
