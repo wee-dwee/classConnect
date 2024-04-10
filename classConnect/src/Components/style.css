@@ -1,93 +1,105 @@
 .joined {
-    display: flex;
-    flex-wrap: wrap;
-    padding-left: 1.5rem;
-    padding-top: 1.5rem;
-    margin-left: 5%;
-    text-decoration: none;
-  }
-  ul,
-  ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .joined__list {
-    
-    display: flex;
-    flex-direction: column;
-    height: 21rem;
-    margin-bottom: 1.5rem;
-    margin-right: 1.5rem;
-    overflow: hidden;
-    position: relative;
-    text-align: left;
-    width: 22rem;
-    background-color: #fff;
-    border: 0.0625rem solid #dadce0;
-    -webkit-border-radius: 0.5rem;
-    border-radius: 0.5rem;
-    text-decoration: none;
-  }
-  .joined__imgWrapper {
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    background-color: #174ea6;
-    text-decoration: none;
-  }
-  .joined__image {
-    background-image: url(https://gstatic.com/classroom/themes/Physics.jpg);
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    background-repeat: no-repeat;
-    -webkit-background-size: cover;
-    background-size: cover;
-    text-decoration: none;
-  }
-  .joined__container {
-    position: relative;
-    text-decoration: none;
-  }
-  .joined__content {
-    display: flex;
-    -webkit-flex-direction: column;
-    flex-direction: column;
-    -webkit-justify-content: space-between;
-    justify-content: space-between;
-    height: 6.5rem;
-    padding: 1rem 1rem 0.75rem;
-    position: relative;
-    text-decoration: none;
-  }
-  .joined__title {
-    color: white;
-    font-family: "Roboto";
-    text-decoration: none;
-  }
-  .joined__title h2 {
-    font-weight: 400;
-    text-decoration: none;
-    color: white;
-  }
-  .joined__title h2:hover {
-    /* text-decoration: none; */
-    color: white;
-  }
-  .joined__owner {
-    color: white;
-    font-weight: 400 !important;
-    font-size: 15px !important;
-    margin-top: 15px;
-    text-decoration:none; 
-  }
-  .joined__avatar {
-    margin-right: 1rem !important; /* Adjust this value as needed */
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 1.5rem;
+  padding-top: 1.5rem;
+  margin-left: 5%;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.joined__list {
+
+  display: flex;
+  flex-direction: column;
+  height: 21rem;
+  margin-bottom: 1.5rem;
+  margin-right: 1.5rem;
+  overflow: hidden;
+  position: relative;
+  text-align: left;
+  width: 22rem;
+  background-color: #fff;
+  border: 0.0625rem solid #dadce0;
+  -webkit-border-radius: 0.5rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+}
+
+.joined__imgWrapper {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-color: #174ea6;
+  text-decoration: none;
+}
+
+.joined__image {
+  background-image: url(https://gstatic.com/classroom/themes/Physics.jpg);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  background-size: cover;
+  text-decoration: none;
+}
+
+.joined__container {
+  position: relative;
+  text-decoration: none;
+}
+
+.joined__content {
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  height: 6.5rem;
+  padding: 1rem 1rem 0.75rem;
+  position: relative;
+  text-decoration: none;
+}
+
+.joined__title {
+  color: white;
+  font-family: "Roboto";
+  text-decoration: none;
+}
+
+.joined__title h2 {
+  font-weight: 400;
+  text-decoration: none;
+  color: white;
+}
+
+.joined__title h2:hover {
+  /* text-decoration: none; */
+  color: white;
+}
+
+.joined__owner {
+  color: white;
+  font-weight: 400 !important;
+  font-size: 15px !important;
+  margin-top: 15px;
+  text-decoration: none;
+}
+
+.joined__avatar {
+  margin-right: 1rem !important;
+  /* Adjust this value as needed */
   float: right;
   height: 5rem !important;
   position: relative !important;
@@ -95,22 +107,39 @@
   width: 5rem !important;
   text-align: left;
   border-radius: 50%;
-  }
-  .joined__bottom {
-    margin-top: 40%;
-    display: flex;
-    color: #5f6368;
-    justify-content: flex-end;
-    border-top: 0.2px solid #e0e0e0;
-    padding: 10px;
-  }
-  .joined__bottom > * {
-    margin-right: 20px;
-  }
+}
 
-  .joined__text {
-    /* Example styles */
-    padding: 10px;
-    font-size: 14px;
-  }
-  
+.joined__bottom {
+  margin-top: 40%;
+  display: flex;
+  color: #5f6368;
+  justify-content: flex-end;
+  border-top: 0.2px solid #e0e0e0;
+  padding: 10px;
+}
+
+.joined__bottom>* {
+  margin-right: 20px;
+}
+
+.joined__text {
+  /* Example styles */
+  padding: 10px;
+  font-size: 14px;
+}
+
+.joined__menu {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  /* Ensure it's above other elements */
+}
+
+/* ... existing CSS ... */
+
+.joined__wrapper {
+  position: relative;
+  /* To position the menu absolutely with respect to the card */
+  /* ... other styles ... */
+}
