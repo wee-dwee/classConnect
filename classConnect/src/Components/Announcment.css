@@ -13,6 +13,9 @@
   .amt__top > * {
     margin-left: 10px;
   }
+  .dateandtime{
+    margin-left: 65%;
+  }
   .amt__Cnt {
     padding: 0.5rem 0;
   }
@@ -29,6 +32,42 @@
   @media only screen and (max-width: 650px) {
     .amt__Cnt{
       width: 88vw;
+    }
+  }
+
+  @media only screen and (max-width: 1030px){
+    .dateandtime{
+      margin-left: 60%;
+    }
+  }
+  @media only screen and (max-width: 910px){
+    .dateandtime{
+      margin-left: 55%;
+    }
+  }
+  @media only screen and (max-width: 800px){
+    .dateandtime{
+      margin-left: 50%;
+    }
+  }
+  @media only screen and (max-width: 740px){
+    .dateandtime{
+      margin-left: 45%;
+    }
+  }
+  @media only screen and (max-width: 670px){
+    .dateandtime{
+      margin-left: 40%;
+    }
+  }
+  @media only screen and (max-width: 630px){
+    .dateandtime{
+      margin-left: 30%;
+    }
+  }
+  @media only screen and (max-width: 540px){
+    .dateandtime{
+      margin-left: 25%;
     }
   }
   

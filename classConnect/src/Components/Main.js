@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import { useParams } from "react-router-dom";
 
 export default function Main({ username }) {
-  const [showInput, setShowInput] = useState(false);
+  const [showInput, setShowInput] = useState(true);
   const [inputValue, setInputValue] = useState("");
   const [classname, setClassname] = useState("");
   const [classoname, setClassoname] = useState("");
@@ -33,7 +33,7 @@ export default function Main({ username }) {
     };
     fetchProfileDetails();
   }, [profileId]);
-  console.log(checkisinst);
+
   useEffect(() => {
     const fetchClassDetails = async () => {
       try {
@@ -107,7 +107,12 @@ export default function Main({ username }) {
             <div className="main__announcements">
               <div className="main__announcementsWrapper">
                 <div className="main__ancContent">
-                  {showInput ? (
+                  {checkisinst === false ? (
+                    <div className="main__wrapper100">
+                      <Avatar />
+                      <div>View the announcements</div>
+                    </div>
+                  ) : showInput ? (
                     <div className="main__form">
                       <TextField
                         id="filled-multiline-flexible"

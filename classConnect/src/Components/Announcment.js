@@ -31,7 +31,7 @@ export default function Announcement({ classId }) {
                         <div className="amt__top">
                             <Avatar />
                             <div>{announcement.classOwner}</div>
-                            <div>{new Date(announcement.createdAt).toLocaleString()}</div> {/* Display date and time */}
+                            <div className="dateandtime">{new Date(announcement.createdAt).toLocaleString()}</div> {/* Display date and time */}
                         </div>
                         <p className="amt__txt">{announcement.content}</p>
                         <img className="amt__img" src={announcement.image || student} alt="No image" />
