@@ -14,6 +14,14 @@ ol {
   padding: 0;
 }
 
+.joined__title h4:hover {
+  color: white;
+}
+
+.joined__content h4:hover {
+  color: white;
+}
+
 .joined__list {
 
   display: flex;
@@ -78,13 +86,13 @@ ol {
   text-decoration: none;
 }
 
-.joined__title h2 {
+.joined__title h4 {
   font-weight: 400;
   text-decoration: none;
   color: white;
 }
 
-.joined__title h2:hover {
+.joined__title h4:hover {
   /* text-decoration: none; */
   color: white;
 }

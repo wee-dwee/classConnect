@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import axios from "axios";
 import "./editprofile.css"; // Import CSS for styling
-import Footer1 from "./Footer1.js";
+import Footer from "./Footer.js";
 import Navbar from "./Navbar.js";
 import ImageUpload from "../ImageUpload.js";
 
@@ -142,7 +142,7 @@ export default function EditProfile() {
           )}
         </div>
       </div>
-      <Footer1 />
+      <Footer />
     </>
   );
 }

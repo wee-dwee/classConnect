@@ -92,7 +92,7 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
           <div className="joined__image" />
           <div className="joined__content">
             <Link className="joined__title" to={`/main/${classId}/${thisprofileId}`} onClick={handleClassSelection}>
-              <h2>{title}</h2>
+              <h4>{title}</h4>
             </Link>
             <p className="joined__owner">
               {isInstructor ? classcode : owner}
