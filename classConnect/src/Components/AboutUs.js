@@ -7,10 +7,10 @@ import img3 from './jobs-1.svg'
 import img4 from './mobile.svg'
 import img5 from './database.svg'
 import img6 from './security.svg'
-import img7 from './teacher.png'
-import img8 from './teacher.png'
+import img7 from './img7.png'
+import img8 from './img8.png'
 import img9 from './teacher.png'
-import img10 from './teacher.png'
+import img10 from './img10.jpg'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfileCard from './ProfileCard';
 import Footer1 from './Footer1';
@@ -39,7 +39,7 @@ const AboutUs = ({username}) => {
       username: 'Web Developer',
       imageSrc: img10,
       socialLinks: [
-        {url: 'https://www.linkedin.com/in/vinit-mehta-5a7b98251/' },
+        {url: 'https://www.linkedin.com/in/dweej-pandya-14936b249?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app' },
       ],
     },
     {
@@ -47,7 +47,7 @@ const AboutUs = ({username}) => {
       username: 'Web Developer',
       imageSrc: img8,
       socialLinks: [
-        {url: 'https://www.linkedin.com/in/vinit-mehta-5a7b98251/' },
+        {url: 'https://www.linkedin.com/in/aarsh-b-9a06a7226?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app' },
       ],
     },
     {

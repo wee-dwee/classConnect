@@ -8,7 +8,7 @@ export default function Announcement({ classId }) {
 
     useEffect(() => {
         fetchAnnouncements();
-    }, [classId]); // Include classId in the dependency array to re-fetch announcements when it changes
+    }, [classId]);
 
     const fetchAnnouncements = async () => {
         try {
@@ -17,28 +17,33 @@ export default function Announcement({ classId }) {
                 throw new Error('Failed to fetch announcements');
             }
             const data = await response.json();
-            setAnnouncements(data); // Update state using setAnnouncements
+            setAnnouncements(data);
         } catch (error) {
             console.error('Error fetching announcements:', error);
         }
     };
 
+    const downloadFile = (file) => {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = `http://localhost:3002/uploads/${file}`;
+        downloadLink.download = file;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    };
+
     const renderFilePreview = (file) => {
         const extension = file.split('.').pop().toLowerCase();
         switch (extension) {
-            // case 'pdf':
-            //     return (
-            //         <div>
-            //             <a href={`http://localhost:3002/uploads/${file}`} download={file}>{file}</a>
-            //         </div>
-            //     );
-            
             default:
-                return <a href={`http://localhost:3002/uploads/${file}`} download={file}>{file}</a>;
+                return (
+                    <button className="download-btn" onClick={() => downloadFile(file)} style={{ color: 'black' }}>
+                        Download {file}
+                    </button>
+                );
         }
     };
     
-
     return (
         <div>
             {announcements.slice().reverse().map((announcement, index) => (
@@ -47,7 +52,7 @@ export default function Announcement({ classId }) {
                         <div className="amt__top">
                             <Avatar />
                             <div>{announcement.classOwner}</div>
-                            <div className="dateandtime">{new Date(announcement.createdAt).toLocaleString()}</div> {/* Display date and time */}
+                            <div className="dateandtime">{new Date(announcement.createdAt).toLocaleString()}</div>
                         </div>
                         <p className="amt__txt">{announcement.content}</p>
                         {announcement.files && announcement.files.map((file, idx) => (

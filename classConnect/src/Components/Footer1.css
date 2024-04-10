@@ -10,7 +10,6 @@
 body {
   position: relative;
   margin: 0;
-  padding-bottom: 50px; /* Height of the footer */
   min-height: 100vh;
   background-color: rgb(237, 230,230);
 }
