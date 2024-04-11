@@ -393,6 +393,30 @@ app.get("/show-classes/:profileId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+app.delete("/classes/:classId", async (req, res) => {
+  try {
+    const { classId } = req.params;
+
+    // Find the class by its ID
+    const deletedClass = await Class.findByIdAndDelete(classId);
+
+    if (!deletedClass) {
+      return res.status(404).json({ error: "Class not found" });
+    }
+
+    // Remove the class ID from the profiles of all students and faculty
+    await Profile.updateMany(
+      { $or: [{ joinedClasses: classId }, { _id: deletedClass.owner }] },
+      { $pull: { joinedClasses: classId } }
+    );
+
+    console.log("Class deleted:", deletedClass);
+    res.status(200).json({ message: "Class deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting class:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 //--------------------------------------------------ANNOUNCEMENTS--------------------------------------------------
 app.get("/classes/:classId/announcements", async (req, res) => {
   try {
