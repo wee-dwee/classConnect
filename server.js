@@ -74,7 +74,25 @@ const announcementSchema = new mongoose.Schema({
     ref: "Profile",
   },
   files: [String], // Array of strings named 'files'
+  messages: [
+    {
+      content: {
+        type: String,
+        required: true,
+      },
+      sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Profile",
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      }
+    }
+  ]
 });
+
 
 const assignmentSchema = new mongoose.Schema({
   title: {
@@ -380,16 +398,21 @@ app.get("/classes/:classId/announcements", async (req, res) => {
   try {
     const classId = req.params.classId;
 
-    // Find the class by its ID and populate the announcements field and owner field
+    // Find the class by its ID and populate the announcements field, owner field, and messages field
     const foundClass = await Class.findById(classId)
-      .populate("announcements.createdBy", "name email") // Populate createdBy field with Profile data
+      .populate({
+        path: "announcements",
+        populate: {
+          path: "messages.sender",
+          select: "name email", // Assuming sender information is stored in a Profile model
+        },
+      })
       .populate("owner", "name"); // Populate owner field with Profile data
 
     if (!foundClass) {
       return res.status(404).json({ message: "Class not found" });
     }
-    const {students} = foundClass.students;
-    
+
     // Map over the announcements and add the classOwner name to each announcement object
     const announcementsWithClassOwner = foundClass.announcements.map(
       (announcement) => ({
@@ -397,13 +420,14 @@ app.get("/classes/:classId/announcements", async (req, res) => {
         classOwner: foundClass.owner.name, // Add classOwner name to each announcement
       })
     );
-
-    res.json(announcementsWithClassOwner); // Return the announcements along with classOwner name
+    console.log(announcementsWithClassOwner);
+    res.json(announcementsWithClassOwner); // Return the announcements along with classOwner name and messages
   } catch (error) {
     console.error("Error fetching announcements:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // Endpoint to add an announcement to a class
 app.post(
@@ -472,6 +496,56 @@ app.post(
     }
   }
 );
+app.post('/classes/:classId/announcements/:announcementId/add-message', async (req, res) => {
+  try {
+    const { classId, announcementId } = req.params;
+    const { messageContent } = req.body;
+    
+    // Validate if classId and announcementId are valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(classId) || !mongoose.Types.ObjectId.isValid(announcementId)) {
+      return res.status(400).json({ error: 'Invalid classId or announcementId' });
+    }
+    
+    // Find the announcement by classId and announcementId
+    const announcement = await Announcement.findOne({ _id: announcementId });
+    if (!announcement) {
+      return res.status(404).json({ error: 'Announcement not found' });
+    }
+    
+    // Add the message to the announcement
+    announcement.messages.push({
+      content: messageContent,
+      sender: req.body.sender, // Assuming sender info is available in the request body
+      createdAt: new Date(),
+    });
+
+    // Save the updated announcement
+    await announcement.save();
+
+    // Update the parent class with the updated announcement
+    const parentClass = await Class.findOne({ _id: classId });
+    if (!parentClass) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+
+    // Find the index of the announcement in the class's announcements array
+    const announcementIndex = parentClass.announcements.findIndex(a => a._id.toString() === announcementId);
+    if (announcementIndex === -1) {
+      return res.status(404).json({ error: 'Announcement not found in class' });
+    }
+
+    // Update the class's announcements array with the updated announcement
+    parentClass.announcements[announcementIndex] = announcement;
+
+    // Save the updated class
+    await parentClass.save();
+
+    res.json(announcement); // Return the updated announcement
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
 //--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
 app.post("/api/register", async (req, res) => {
   try {

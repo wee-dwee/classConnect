@@ -54,6 +54,7 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
       });
       const data = await response.json();
       console.log(data.message); // Log the response message
+      window.location.reload();
       // You may want to perform additional actions here, such as updating UI or state
     } catch (error) {
       console.error('Error unenrolling from class:', error);

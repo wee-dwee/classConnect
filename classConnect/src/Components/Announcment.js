@@ -3,8 +3,9 @@ import "./Announcment.css";
 import Avatar from "@mui/material/Avatar";
 import student from "./student.png";
 
-export default function Announcement({ classId }) {
+export default function Announcement({ classId, senderName }) {
   const [announcements, setAnnouncements] = useState([]);
+  const [messageContents, setMessageContents] = useState({});
 
   useEffect(() => {
     fetchAnnouncements();
@@ -24,7 +25,7 @@ export default function Announcement({ classId }) {
       console.error("Error fetching announcements:", error);
     }
   };
-
+  console.log(announcements);
   const downloadFile = (file) => {
     const downloadLink = document.createElement("a");
     downloadLink.href = `http://localhost:3002/uploads/${file}`;
@@ -50,6 +51,32 @@ export default function Announcement({ classId }) {
     }
   };
 
+  const handleAddMessage = async (announcementId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3002/classes/${classId}/announcements/${announcementId}/add-message`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ messageContent: messageContents[announcementId], sender: senderName }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to add message");
+      }
+      fetchAnnouncements(); // Refresh announcements after adding message
+      setMessageContents(""); // Clear message content input field
+    } catch (error) {
+      console.error("Error adding message:", error);
+    }
+  };
+  
+  const handleMessageChange = (announcementId, value) => {
+    setMessageContents({ ...messageContents, [announcementId]: value });
+  };
+
   return (
     <div>
       {announcements
@@ -66,12 +93,40 @@ export default function Announcement({ classId }) {
                 </div>
               </div>
               <p className="amt__txt">{announcement.content}</p>
+              {/* Show messages */}
+              {announcement.messages &&
+                announcement.messages.map((message, idx) => (
+                  <div key={idx} className="message">
+                    <Avatar />
+                    <div>{message.sender.name}</div>
+                    <div className="dateandtime">
+                      {new Date(message.createdAt).toLocaleString()}
+                    </div>
+                    <p>{message.content}</p>
+                  </div>
+                ))}
+              {/* Show files */}
               {announcement.files &&
                 announcement.files.map((file, idx) => (
                   <div key={idx} className="file-preview">
                     {renderFilePreview(file)}
                   </div>
                 ))}
+              {/* Add message form */}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleAddMessage(announcement._id);
+                }}
+              >
+                <input
+                  type="text"
+                  value={messageContents[announcement._id] || ""}
+                  onChange={(e) => handleMessageChange(announcement._id, e.target.value)}
+                  placeholder="Type your message..."
+                />
+                <button type="submit">Send</button>
+              </form>
             </div>
           </div>
         ))}

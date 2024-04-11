@@ -84,6 +84,7 @@ export default function Main({ username }) {
       // Clear input field and hide input
       setInputValue("");
       setShowInput(false);
+      window.location.reload();
       // Reload announcements
       // You can use a similar approach as fetching class details
     } catch (error) {
@@ -158,7 +159,7 @@ export default function Main({ username }) {
                   
                 </div>
               </div>
-              <Announcment classId={classId}/>
+              <Announcment classId={classId} senderName={profileId}/>
             </div>
           </div>
         </div>
