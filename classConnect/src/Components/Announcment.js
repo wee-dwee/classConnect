@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import "./Announcment.css";
 import Avatar from "@mui/material/Avatar";
 import student from "./student.png";
+import Button from '@mui/material/Button';
 
 export default function Announcement({ classId, senderName }) {
   const [announcements, setAnnouncements] = useState([]);
   const [messageContents, setMessageContents] = useState({});
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
 
   useEffect(() => {
     fetchAnnouncements();
@@ -25,7 +27,7 @@ export default function Announcement({ classId, senderName }) {
       console.error("Error fetching announcements:", error);
     }
   };
-  console.log(announcements);
+
   const downloadFile = (file) => {
     const downloadLink = document.createElement("a");
     downloadLink.href = `http://localhost:3002/uploads/${file}`;
@@ -72,9 +74,13 @@ export default function Announcement({ classId, senderName }) {
       console.error("Error adding message:", error);
     }
   };
-  
+
   const handleMessageChange = (announcementId, value) => {
     setMessageContents({ ...messageContents, [announcementId]: value });
+  };
+
+  const toggleComments = (announcementId) => {
+    setSelectedAnnouncement(selectedAnnouncement === announcementId ? null : announcementId);
   };
 
   return (
@@ -94,15 +100,19 @@ export default function Announcement({ classId, senderName }) {
               </div>
               <p className="amt__txt">{announcement.content}</p>
               {/* Show messages */}
-              {announcement.messages &&
+              {selectedAnnouncement === announcement._id && announcement.messages &&
                 announcement.messages.map((message, idx) => (
-                  <div key={idx} className="message">
-                    <Avatar />
-                    <div>{message.sender.name}</div>
-                    <div className="dateandtime">
-                      {new Date(message.createdAt).toLocaleString()}
+                  <div key={idx}>
+                    <div className="amt__top">
+                      <Avatar />
+                      <div>
+                        {message.sender.name}
+                      </div>
+                      <div className="dateandtime">
+                        {new Date(message.createdAt).toLocaleString()}
+                      </div>
                     </div>
-                    <p>{message.content}</p>
+                    <p className="amt__txt">{message.content}</p>
                   </div>
                 ))}
               {/* Show files */}
@@ -123,10 +133,25 @@ export default function Announcement({ classId, senderName }) {
                   type="text"
                   value={messageContents[announcement._id] || ""}
                   onChange={(e) => handleMessageChange(announcement._id, e.target.value)}
-                  placeholder="Type your message..."
+                  placeholder="Type your comment..."
+                  className="inputcss"
                 />
-                <button type="submit">Send</button>
+                <div className="messagesubmit">
+                  <Button 
+                      type="submit" 
+                      color="primary"
+                      variant="contained">
+                    Send
+                  </Button>
+                </div>
               </form>
+              {/* Toggle comments button */}
+              <div className="messagesubmit">
+                <Button variant="outlined" onClick={() => toggleComments(announcement._id)}>
+                  {selectedAnnouncement === announcement._id ? "Hide Comments" : "See Comments"}
+                </Button>
+              </div>
+
             </div>
           </div>
         ))}

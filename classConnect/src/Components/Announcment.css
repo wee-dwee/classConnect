@@ -18,9 +18,11 @@
   }
   .amt__Cnt {
     padding: 0.5rem 0;
+    transition: opacity 0.5s ease, max-height 0.5s ease;
   }
   .amt__txt {
     margin: 10px 15px;
+    margin-left: 25px;
   }
   .amt__img {
     height: 150px;
@@ -35,6 +37,7 @@
     margin-left: 5px;
     font-size: 0.9rem;
     background: transparent;
+    margin-left: 25px;
   }
 
   @media only screen and (max-width: 650px) {
@@ -76,6 +79,35 @@
   @media only screen and (max-width: 540px){
     .dateandtime{
       margin-left: 21%;
+    }
+  }
+
+  .inputcss{
+    display: flex; /* Use flexbox */
+    align-items: center; /* Vertically center the content */
+    border-radius: 5px;
+    width: 95%;
+    margin: auto;
+    height:35px;
+    margin-top: 10px;
+  }
+
+  .messagesubmit{
+    margin: 10px;
+    margin-left: 25px;
+  }
+
+  @media only screen and (max-width: 900px)
+  {
+    .messagesubmit{
+      margin-left: 20px;
+    }
+  }
+
+  @media only screen and (max-width: 600px)
+  {
+    .messagesubmit{
+      margin-left: 15px;
     }
   }
   

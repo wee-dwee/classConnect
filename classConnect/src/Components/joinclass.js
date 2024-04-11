@@ -44,8 +44,6 @@ const JoinClassPage = ({username}) => {
       </div>
       <button onClick={handleJoinClass} className="joinclassbtn">Join Class</button>
     </div>
-    
-    
     </div>
     <Footer3 />
     </>

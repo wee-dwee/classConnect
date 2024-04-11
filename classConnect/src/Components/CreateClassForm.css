@@ -63,8 +63,7 @@
   /* CreateClassForm.css */
 
 /* Add styles for input elements */
-input[type="text"],
-textarea {
+.inputcreate {
   width: 100%; 
   height: 40px; 
   padding: 8px; 

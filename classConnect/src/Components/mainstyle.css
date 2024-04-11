@@ -154,6 +154,12 @@
     {
       width: 82vw;
     }
+    .main__announcementsWrapper{
+      width: 92vw;
+    }
+    .amt__Cnt{
+      width: 92vw;
+    }
   }
 
   @media only screen and (max-width: 750px) {
@@ -166,6 +172,12 @@
     .main__buttons
     {
       width: 77vw;
+    }
+    .main__announcementsWrapper{
+      width: 90vw;
+    }
+    .amt__Cnt{
+      width: 90vw;
     }
   }
 
@@ -185,6 +197,20 @@
     .main__buttons
     {
       width: 72vw;
+    }
+    .amt__Cnt{
+      width: 88vw;
+    }
+  }
+
+  
+  @media only screen and (max-width: 500px) 
+  {
+    .main__announcementsWrapper{
+      width: 86vw;
+    }
+    .amt__Cnt{
+      width: 86vw;
     }
   }
   
