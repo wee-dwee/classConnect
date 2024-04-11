@@ -100,6 +100,7 @@ export default function Announcement({ classId, senderName }) {
               </div>
               <p className="amt__txt">{announcement.content}</p>
               {/* Show messages */}
+              <hr />
               {selectedAnnouncement === announcement._id && announcement.messages &&
                 announcement.messages.map((message, idx) => (
                   <div key={idx}>
@@ -117,7 +118,10 @@ export default function Announcement({ classId, senderName }) {
                 ))}
               {/* Show files */}
               {announcement.files &&
-                announcement.files.map((file, idx) => (
+                announcement.files
+                .slice()
+                .reverse()
+                .map((file, idx) => (
                   <div key={idx} className="file-preview">
                     {renderFilePreview(file)}
                   </div>

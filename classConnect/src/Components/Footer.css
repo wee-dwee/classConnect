@@ -4,9 +4,10 @@
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+  margin-top: 89vh;
 }
 .footer {
-  position: absolute;
+  position: fixed;
   width: 100vw;
   background: #3586ff;
   min-height: 20px;

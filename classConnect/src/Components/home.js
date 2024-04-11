@@ -3,9 +3,10 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import { useParams, useHistory } from "react-router-dom";
 import Footer3 from './Footer3.js';
+import Footer from './Footer.js';
 import Navbar from './Navbar.js';
 import CreateCard from './CreateCard.js';
-
+import './home.css';
 function Home({setuserclassId}) {
   const [profile, setProfile] = useState({});
   const [createdClasses, setCreatedClasses] = useState([]);
@@ -36,6 +37,9 @@ function Home({setuserclassId}) {
     <>
       <Navbar username={profile.email} profileId={profileId} />
       <ol className="joined">
+      {createdClasses.length === 0 && (
+          <p className="statement">{profile.isInstructor ? "No classes created by you" : "No classes joined yet"}</p>
+        )}
         {profile.isInstructor ? (
           // If the user is an instructor, display classes taught by the instructor
           createdClasses.map((classItem) => (
@@ -67,7 +71,7 @@ function Home({setuserclassId}) {
           ))
         )}
       </ol>
-      <Footer3 />
+      {createdClasses.length === 0 ? <Footer /> : <Footer3 />}
     </>
   );
 }

@@ -1,0 +1,10 @@
+.statement {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Poppins', sans-serif; /* Assuming Poppins font is imported */
+    font-size: 1.5rem;
+    color: #333; /* Update color as needed */
+    text-align: center;
+  }

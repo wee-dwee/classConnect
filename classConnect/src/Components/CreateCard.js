@@ -86,6 +86,7 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
             onClose={handleClose}
           >
             <MenuItem onClick={handleUnenroll}>Unenroll</MenuItem>
+            <MenuItem onClick={handleUnenroll}>See enrolled Students</MenuItem>
           </Menu>
         </div>
         <div className="joined__container">
