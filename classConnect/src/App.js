@@ -15,7 +15,7 @@ import CreateClassForm from "./Components/createclass";
 import JoinClassPage from "./Components/joinclass";
 import CreateCard from './Components/CreateCard.js';
 import Main from './Components/Main.js';
-
+import SeeStudents from './Components/SeeStudents.js';
 function App() {
   const location = useLocation();
   const [username, setUsername] = useState("");
@@ -42,7 +42,7 @@ function App() {
   const setuserclassIdFromClasses = useCallback((enteredClassId) => {
     setuserclassId(enteredClassId);
   }, []);
-  console.log(profileId);
+  console.log(classId);
   console.log("prof");
   return (
     <div>
@@ -87,6 +87,9 @@ function App() {
           </Route>
           <Route exact path="/contactus/:profileId">
             <ContactUs username={username}/>
+          </Route>
+          <Route exact path="/see-students/:classId">
+            <SeeStudents/>
           </Route>
         </Switch>
       </UserContextProvider>

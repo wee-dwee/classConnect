@@ -195,7 +195,7 @@ app.put("/editprofile/:profileId", async (req, res) => {
   try {
     const { name, email, bio } = req.body;
     const profileId = req.params.profileId;
-    console.log(profileId);
+    
     // Find the user's profile by username
     const profile = await Profile.findOneAndUpdate(
       { _id: profileId },
@@ -420,7 +420,7 @@ app.get("/classes/:classId/announcements", async (req, res) => {
         classOwner: foundClass.owner.name, // Add classOwner name to each announcement
       })
     );
-    console.log(announcementsWithClassOwner);
+    
     res.json(announcementsWithClassOwner); // Return the announcements along with classOwner name and messages
   } catch (error) {
     console.error("Error fetching announcements:", error);
@@ -547,6 +547,7 @@ app.post('/classes/:classId/announcements/:announcementId/add-message', async (r
   }
 });
 //--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
+
 app.post("/api/register", async (req, res) => {
   try {
     const { name, username, password, isInstructor } = req.body;
@@ -597,7 +598,7 @@ app.post("/api/login", async (req, res) => {
     // Find user profile
     const profile = await Profile.findOne({ email: username });
     const profileId = profile._id; // Get profile ID
-    console.log(profileId);
+
 
     // Generate JWT token
     const token = jwt.sign({ userId: user._id, username }, "secret-key", {
@@ -771,6 +772,36 @@ app.post("/remove-image/:username", async (req,res)=>{
     return res.status(500).json({ error: "Internal Server Error" });
   }
   
+});
+app.get('/classes/:classId/students', async (req, res) => {
+  const classId = req.params.classId;
+  
+  try {
+    // Find the class data by ID
+    const classData = await Class.findById(classId);
+
+    if (!classData) {
+      return res.status(404).json({ error: 'Class not found' });
+    }
+
+    const studentIds = classData.students; // Array of student IDs from classData
+    const studentNames = [];
+
+    // Iterate over the studentIds array
+    for (const studentId of studentIds) {
+      // Find the user by ID and retrieve the name
+      console.log(studentId);
+      const user = await Profile.findById(studentId);
+      if (user) {
+        studentNames.push(user.name); // Push the name to studentNames array
+      }
+    }
+
+    res.json(studentNames); // Send the array of student names in the response
+  } catch (error) {
+    console.error('Error fetching class data:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

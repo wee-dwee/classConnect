@@ -5,7 +5,7 @@ import Announcment from './Announcment.js';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 
 export default function Main({ username }) {
   const [showInput, setShowInput] = useState(true);
@@ -18,6 +18,8 @@ export default function Main({ username }) {
   const { classId } = useParams();
   const { profileId } = useParams();
   const [checkisinst,setcheckisinst]=useState("");
+  const history = useHistory();
+
   useEffect(() => {
     const fetchProfileDetails = async () => {
       try {
@@ -53,6 +55,11 @@ export default function Main({ username }) {
 
     fetchClassDetails();
   }, [classId]);
+
+  const handleSeeStudents = () => {
+    // Redirect to see students page
+    history.push(`/see-students/${classId}`);
+  };
 
   const handleAnnouncementSubmit = async () => {
     try {
@@ -156,10 +163,17 @@ export default function Main({ username }) {
                       <div>Announce Something to Class</div>
                     </div>
                   )}
-                  
                 </div>
               </div>
               <Announcment classId={classId} senderName={profileId}/>
+              {/* Add "See Students" button here */}
+              {checkisinst && (
+                <div className="main__seeStudentsButton">
+                  <Button onClick={handleSeeStudents} variant="contained" color="primary">
+                    See Students
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         </div>
