@@ -20,7 +20,7 @@
 }
 
 .footer3 {
-    position: sticky;
+  position: relative;
   width: 100%;
   background: #3586ff;
   padding: 5px;
