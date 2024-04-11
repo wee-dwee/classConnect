@@ -10,6 +10,9 @@
     align-items: center;
     border-radius: 20px;
   }
+  .supportus{
+    height: 80vh;
+  }
 
   .formhead{
     margin-bottom: 10px;

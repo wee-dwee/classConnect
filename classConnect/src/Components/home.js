@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
 import { useParams, useHistory } from "react-router-dom";
-import Footer from './Footer.js';
+import Footer3 from './Footer3.js';
 import Navbar from './Navbar.js';
 import CreateCard from './CreateCard.js';
 
@@ -67,7 +67,7 @@ function Home({setuserclassId}) {
           ))
         )}
       </ol>
-      <Footer />
+      <Footer3 />
     </>
   );
 }

@@ -38,6 +38,9 @@ export default function Profile() {
   return (
     <>
       <Navbar username={profile.name} profileId={profileId}/>
+      <div className="supportme">
+
+      
       <div className="create-box">
         <div className="upc">
           <div className="gradient"></div>
@@ -72,6 +75,7 @@ export default function Profile() {
             )}
           </div>
         </div>
+      </div>
       </div>
       <Footer1 />
     </>

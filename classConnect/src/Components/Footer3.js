@@ -1,6 +1,5 @@
-import React, {useState,useEffect} from 'react';
-import { IonIcon } from '@ionic/react';
-import './Footer1.css';
+import React, { useEffect, useState } from 'react';
+import './Footer3.css';
 
 const Footer = () => {
   const [isSticky, setIsSticky] = useState(false);
@@ -18,15 +17,13 @@ const Footer = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  console.log("hfbdsf");
-  console.log(isSticky);
+
   return (
-    <div className={isSticky ? "foo1-sticky" : "foo1"}>
-          <footer className="footer1">
-          <p>&copy;Copyright : ClassConnect by ProjectDAVS</p>
-        </footer>
+    <div className={isSticky ? "foo3-sticky" : "foo3"}>
+      <footer className="footer3">
+        <p>&copy; Copyright : ClassConnect by ProjectDAVS</p>
+      </footer>
     </div>
-    
   );
 };
 

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useHistory } from "react-router-dom"; // Removed unnecessary import
 import './JoinClassPage.css';
-import Footer from './Footer';
+import Footer3 from './Footer3';
 import Navbar from './Navbar';
 
 const JoinClassPage = ({username}) => {
@@ -33,6 +33,7 @@ const JoinClassPage = ({username}) => {
   return (
     <>
     <Navbar username={username} profileId={profileId} />
+    <div className="poi">
       <div className="join-class-container">
       <h2 className="formhead">Join Class</h2>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
@@ -43,7 +44,10 @@ const JoinClassPage = ({username}) => {
       </div>
       <button onClick={handleJoinClass} className="joinclassbtn">Join Class</button>
     </div>
-    <Footer />
+    
+    
+    </div>
+    <Footer3 />
     </>
     
   );

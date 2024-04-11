@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link, useLocation, useParams, useHistory } from "react-router-dom"; 
 import './CreateClassForm.css'; 
 import Navbar from './Navbar';
-import Footer from './Footer';
+import Footer3 from './Footer3';
 
 function CreateClassForm({ username }) {
   const [name, setName] = useState('');
@@ -63,6 +63,7 @@ function CreateClassForm({ username }) {
   return (
     <>
       <Navbar username={username} profileId={profileId}/>
+      <div className="supportus">
       <div className="create-class-form-container"> {/* Added className for styling */}
         <h2 className="formhead">Create Class</h2>
         {generatedCode && (
@@ -84,7 +85,8 @@ function CreateClassForm({ username }) {
         {errorMessage && <p className="error-message">{errorMessage}</p>}
         {message && <p>{message}</p>}
       </div>
-      <Footer />
+      </div>
+      <Footer3 />
     </>
   );
 }

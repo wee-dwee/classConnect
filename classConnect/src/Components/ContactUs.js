@@ -1,6 +1,6 @@
 import React from 'react';
 import './contactus.css';
-import Footer from './Footer.js';
+import Footer1 from './Footer1.js';
 import Navbar from './Navbar.js';
 import { useParams, useHistory } from "react-router-dom";
 
@@ -62,7 +62,7 @@ Thank you for choosing ClassConnect, for your online learning needs. We look for
         </div>
       </div>
     </section>
-    <Footer />
+    <Footer1 />
     </>
     
   )
