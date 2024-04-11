@@ -46,10 +46,13 @@ const styles = {
   heading: {
     fontSize: '24px',
     marginBottom: '10px',
+    textAlign: 'center', 
+    margin: '20px'
   },
   studentList: {
     listStyleType: 'none',
     padding: 0,
+    fontWeight:'450',
   },
   studentItem: {
     marginBottom: '5px',

@@ -9,7 +9,7 @@ import img5 from './database.svg'
 import img6 from './security.svg'
 import img7 from './img7.png'
 import img8 from './img8.png'
-import img9 from './teacher.png'
+import img9 from './img9.png'
 import img10 from './img10.jpg'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ProfileCard from './ProfileCard';
@@ -55,7 +55,7 @@ const AboutUs = ({username}) => {
       username: 'Web Developer',
       imageSrc: img9,
       socialLinks: [ 
-        {url: 'https://www.linkedin.com/in/vinit-mehta-5a7b98251/' }
+        {url: 'http://www.linkedin.com/in/sankalp-bohidar-518193158' }
       ],
     }
 

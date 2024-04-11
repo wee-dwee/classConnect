@@ -99,6 +99,15 @@ export default function Announcement({ classId, senderName }) {
                 </div>
               </div>
               <p className="amt__txt">{announcement.content}</p>
+              {announcement.files &&
+                announcement.files
+                .slice()
+                .reverse()
+                .map((file, idx) => (
+                  <div key={idx} className="file-preview">
+                    {renderFilePreview(file)}
+                  </div>
+                ))}
               {/* Show messages */}
               <hr />
               {selectedAnnouncement === announcement._id && announcement.messages &&
@@ -117,15 +126,7 @@ export default function Announcement({ classId, senderName }) {
                   </div>
                 ))}
               {/* Show files */}
-              {announcement.files &&
-                announcement.files
-                .slice()
-                .reverse()
-                .map((file, idx) => (
-                  <div key={idx} className="file-preview">
-                    {renderFilePreview(file)}
-                  </div>
-                ))}
+              
               {/* Add message form */}
               <form
                 onSubmit={(e) => {

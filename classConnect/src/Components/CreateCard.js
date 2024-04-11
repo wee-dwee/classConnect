@@ -1,7 +1,7 @@
 import Avatar from "@mui/material/Avatar";
 import { FolderOpen, PermContactCalendar } from '@mui/icons-material';
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link,useHistory } from "react-router-dom";
 import "./style.css";
 import teacher from './teacher.png';
 import IconButton from "@mui/material/IconButton";
@@ -13,6 +13,7 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
   const [userProfile, setUserProfile] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const history = useHistory();
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,6 +21,11 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSeeStudents = () => {
+    // Redirect to see students page
+    history.push(`/see-students/${classId}`);
   };
 
   useEffect(() => {
@@ -86,7 +92,7 @@ const CreateCard = ({ classId, title, owner, classcode, isInstructor, profileId,
             onClose={handleClose}
           >
             <MenuItem onClick={handleUnenroll}>Unenroll</MenuItem>
-            <MenuItem onClick={handleUnenroll}>See enrolled Students</MenuItem>
+            <MenuItem onClick={handleSeeStudents}>See enrolled Students</MenuItem>
           </Menu>
         </div>
         <div className="joined__container">
