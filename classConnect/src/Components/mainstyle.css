@@ -82,7 +82,7 @@
     margin-top: 1rem;
   }
   .main__announcements {
-    padding: 1rem;
+    padding-top: 1rem;
     overflow: hidden;
     margin: -2.4rem;
     margin-left: 0.00000001rem;
@@ -111,7 +111,7 @@
   }
   .main__ancContent {
     padding: 30px;
-    width: 980px;
+    width: 1000px;
     color: rgba(0, 0, 0, 0.549);
   }
   
@@ -124,7 +124,7 @@
     margin-right: 20px;
   }
   #filled-multiline-flexible {
-    width: 890px;
+    width: 920px;
     height: 20vh !important;
   }
   .main__form {
@@ -135,7 +135,7 @@
   .main__buttons {
     display: flex;
     justify-content: space-between;
-    width: 890px;
+    width: 920px;
     margin-top: 20px;
   }
   @media only screen and (max-width: 842px) {
@@ -145,61 +145,79 @@
   }
   @media only screen and (max-width: 1050px) {
     .main__ancContent {
-      width: 92vw;
+      width: 95vw;
     }
     #filled-multiline-flexible{
-      width: 82vw;
+      width: 87vw;
     }
     .main__buttons
     {
-      width: 82vw;
+      width: 88vw;
     }
     .main__announcementsWrapper{
-      width: 92vw;
+      width: 95vw;
     }
     .amt__Cnt{
-      width: 92vw;
+      width: 95vw;
+    }
+  }
+  @media only screen and (max-width: 950px) {
+    .main__ancContent {
+      width: 94vw;
+    }
+    #filled-multiline-flexible{
+      width: 84vw;
+    }
+    .main__buttons
+    {
+      width: 86vw;
+    }
+    .main__announcementsWrapper{
+      width: 94vw;
+    }
+    .amt__Cnt{
+      width: 94vw;
     }
   }
 
   @media only screen and (max-width: 750px) {
     .main__ancContent {
-      width: 90vw;
+      width: 93vw;
     }
     #filled-multiline-flexible{
-      width:77vw;
+      width:79vw;
     }
     .main__buttons
     {
-      width: 77vw;
+      width: 84vw;
     }
     .main__announcementsWrapper{
-      width: 90vw;
+      width: 94vw;
     }
     .amt__Cnt{
-      width: 90vw;
+      width: 93vw;
     }
   }
 
   @media only screen and (max-width: 650px) {
     .main__ancContent {
-      width: 88vw;
+      width: 91vw;
     }
     .main__announcementsWrapper{
-      width: 88vw;
+      width: 91vw;
     }
     .main__heading{
       font-size: 2.rem;
     }
     #filled-multiline-flexible{
-      width: 72vw;
+      width: 77vw;
     }
     .main__buttons
     {
-      width: 72vw;
+      width: 83vw;
     }
     .amt__Cnt{
-      width: 88vw;
+      width: 91vw;
     }
   }
 
@@ -207,10 +225,13 @@
   @media only screen and (max-width: 500px) 
   {
     .main__announcementsWrapper{
-      width: 86vw;
+      width: 89vw;
     }
     .amt__Cnt{
-      width: 86vw;
+      width: 89vw;
+    }
+    #filled-multiline-flexible{
+      width: 74vw;
     }
   }
   
