@@ -31,7 +31,7 @@ mongoose
   .then(() => console.log("Connected to MongoDB"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
-//--------------------------------------------------SCHEMAS DEFINED HERE--------------------------------------------------
+
 
 const userSchema = new mongoose.Schema({
   username: String,
@@ -73,7 +73,7 @@ const announcementSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile",
   },
-  files: [String], // Array of strings named 'files'
+  files: [String], 
   messages: [
     {
       content: {
@@ -143,10 +143,10 @@ const Class = mongoose.model("Class", classSchema);
 const Announcement = mongoose.model("Announcement", announcementSchema);
 const Assignment = mongoose.model("Assignment", assignmentSchema);
 
-// Get all profiles
+
 app.use(bodyParser.json());
 
-// Set up multer for handling file uploads
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
@@ -154,17 +154,12 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     cb(null, file.originalname);
   },
-}); // You can adjust storage settings as needed
+});
 const upload = multer({ storage: storage });
-//--------------------------------------------------PROFILE SECTION--------------------------------------------------
-// Create a new profile with an image
 app.post("/profiles", upload.single("image"), async (req, res) => {
   try {
     const { username, email, bio } = req.body;
     const imageBuffer = req.file.buffer;
-
-    // Here you can save the image to your preferred storage solution (e.g., AWS S3, Firebase Storage)
-    // For simplicity, we are just encoding the image buffer as base64 and storing it in the database
     const image = `data:image/png;base64,${imageBuffer.toString("base64")}`;
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -179,7 +174,6 @@ app.get("/profiles", async (req, res) => {
   }
 });
 
-// Get a specific profile by ID
 app.get("/profiles/:profileId", async (req, res) => {
   try {
     const profile = await Profile.findOne({ _id: req.params.profileId });
@@ -195,12 +189,11 @@ app.put("/editprofile/:profileId", async (req, res) => {
   try {
     const { name, email, bio } = req.body;
     const profileId = req.params.profileId;
-    
-    // Find the user's profile by username
+
     const profile = await Profile.findOneAndUpdate(
       { _id: profileId },
       { name, email, bio },
-      { new: true } // Return the updated document
+      { new: true } 
     );
 
     if (!profile) {
@@ -213,12 +206,12 @@ app.put("/editprofile/:profileId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-//--------------------------------------------------CLASS CREATION AND JOINING--------------------------------------------------
+
 app.get("/classes/:profileid", async (req, res) => {
   try {
     const { profileid } = req.params;
 
-    // Assuming you want to find classes owned by a specific user
+    
     const profile_ins = await Profile.find({ _id: profileid });
     const classes = await Class.find({ OwnerUser: profile_ins.email });
 
@@ -231,8 +224,6 @@ app.get("/classes/:profileid", async (req, res) => {
 app.get("/classesbyId/:classId", async (req, res) => {
   try {
     const { classId } = req.params;
-
-    // Assuming you want to find classes owned by a specific user
     const classes = await Class.findOne({ _id: classId }).populate("owner");
 
     res.json(classes);
@@ -243,38 +234,27 @@ app.get("/classesbyId/:classId", async (req, res) => {
 });
 app.post("/classes", async (req, res) => {
   try {
-    // Extract class details from the request body
     const { name, OwnerUserID, bio, classcode } = req.body;
-
-    // Check if the classcode is unique
     const existingClass = await Class.findOne({ classcode });
     if (existingClass) {
       return res
         .status(400)
         .json({ error: "Class with same code already exists" });
     }
-
-    // Find the profile of the class owner
     const ownerProfile = await Profile.findById(OwnerUserID);
     if (!ownerProfile) {
       return res.status(404).json({ error: "Owner profile not found" });
     }
-
-    // Ensure the owner is authorized to create the class
     if (!ownerProfile.isInstructor) {
       console.log("Not Authorized to create class:", ownerProfile.email);
       return res.status(403).json({ error: "Not authorized to create class" });
     }
-
-    // Create a new class instance
     const newClass = new Class({
       name,
       owner: OwnerUserID,
       bio,
       classcode,
     });
-
-    // Save the new class to the database
     await newClass.save();
     console.log("New class created:", newClass);
     res.status(201).json({ message: "Class created successfully", newClass });
@@ -287,36 +267,24 @@ app.post("/classes", async (req, res) => {
 app.post("/join-class", async (req, res) => {
   try {
     const { classcode, profileId } = req.body;
-
-    // Find the class by class code
     const classObj = await Class.findOne({ classcode });
     if (!classObj) {
       return res.status(404).json({ error: "Class not found" });
     }
-
-    // Find the student profile by ID
     const studentProfile = await Profile.findById(profileId);
     if (!studentProfile) {
       return res.status(404).json({ error: "Student profile not found" });
     }
-
-    // Check if the user is an instructor
     if (studentProfile.isInstructor) {
       return res.status(400).json({ error: "You are an instructor" });
     }
-
-    // Check if the student is already added to the class
     if (classObj.students.includes(profileId)) {
       return res
         .status(400)
         .json({ error: "You are already added to the class" });
     }
-
-    // Add the student to the class
     classObj.students.push(profileId);
     await classObj.save();
-
-    // Add the class to the student's joinedClasses array
     studentProfile.joinedClasses.push(classObj._id);
     await studentProfile.save();
 
@@ -331,32 +299,22 @@ app.post("/join-class", async (req, res) => {
 app.post("/unenroll-class", async (req, res) => {
   try {
     const { classId, profileId } = req.body;
-    
-    // Find the class by ID
     const classObj = await Class.findById(classId);
     if (!classObj) {
       return res.status(404).json({ error: "Class not found" });
     }
-    
-    // Find the student profile by ID
+
     const studentProfile = await Profile.findById(profileId);
     if (!studentProfile) {
       return res.status(404).json({ error: "Student profile not found" });
     }
-    
-    // Check if the user is an instructor
     if (studentProfile.isInstructor) {
       return res.status(400).json({ error: "Instructors cannot unenroll from classes" });
     }
-
-    // Check if the student is not enrolled in the class
     if (!classObj.students.includes(profileId)) {
       return res.status(400).json({ error: "You are not enrolled in this class" });
     }
-
-    // Remove the student from the class
     await Class.findByIdAndUpdate(classId, { $pull: { students: profileId } });
-    // Remove the class from the student's joinedClasses array
     await Profile.findByIdAndUpdate(profileId, { $pull: { joinedClasses: classId } });
 
     res.status(200).json({ message: "You have been unenrolled from the class successfully" });
@@ -365,13 +323,10 @@ app.post("/unenroll-class", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-// Assuming you're using Express.js
 
 app.get("/show-classes/:profileId", async (req, res) => {
   try {
     const profileId = req.params.profileId;
-
-    // Find the profile
     const profile = await Profile.findById(profileId);
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });
@@ -380,10 +335,8 @@ app.get("/show-classes/:profileId", async (req, res) => {
     let classes = [];
 
     if (profile.isInstructor) {
-      // If the profile is an instructor, find classes taught by the instructor
       classes = await Class.find({ owner: profileId });
     } else {
-      // If the profile is a student, find classes joined by the student and populate the owner field
       classes = await Class.find({ students: profileId }).populate("owner");
     }
 
@@ -396,15 +349,13 @@ app.get("/show-classes/:profileId", async (req, res) => {
 app.delete("/classes/:classId", async (req, res) => {
   try {
     const { classId } = req.params;
-
-    // Find the class by its ID
     const deletedClass = await Class.findByIdAndDelete(classId);
 
     if (!deletedClass) {
       return res.status(404).json({ error: "Class not found" });
     }
 
-    // Remove the class ID from the profiles of all students and faculty
+    
     await Profile.updateMany(
       { $or: [{ joinedClasses: classId }, { _id: deletedClass.owner }] },
       { $pull: { joinedClasses: classId } }
@@ -417,53 +368,44 @@ app.delete("/classes/:classId", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-//--------------------------------------------------ANNOUNCEMENTS--------------------------------------------------
 app.get("/classes/:classId/announcements", async (req, res) => {
   try {
     const classId = req.params.classId;
-
-    // Find the class by its ID and populate the announcements field, owner field, and messages field
     const foundClass = await Class.findById(classId)
       .populate({
         path: "announcements",
         populate: {
           path: "messages.sender",
-          select: "name email", // Assuming sender information is stored in a Profile model
+          select: "name email",
         },
       })
-      .populate("owner", "name"); // Populate owner field with Profile data
+      .populate("owner", "name"); 
 
     if (!foundClass) {
       return res.status(404).json({ message: "Class not found" });
     }
-
-    // Map over the announcements and add the classOwner name to each announcement object
     const announcementsWithClassOwner = foundClass.announcements.map(
       (announcement) => ({
         ...announcement.toObject(),
-        classOwner: foundClass.owner.name, // Add classOwner name to each announcement
+        classOwner: foundClass.owner.name, 
       })
     );
     
-    res.json(announcementsWithClassOwner); // Return the announcements along with classOwner name and messages
+    res.json(announcementsWithClassOwner); 
   } catch (error) {
     console.error("Error fetching announcements:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
-
-// Endpoint to add an announcement to a class
 app.post(
   "/classes/:classId/add-announcements",
   upload.array("files"),
   async (req, res) => {
     const classId = req.params.classId;
-    const { title, content, createdBy } = req.body; // Extract announcement details from the request body
-    const files = req.files.map((file) => file.originalname); // Extract filenames from the request files
+    const { title, content, createdBy } = req.body; 
+    const files = req.files.map((file) => file.originalname); 
     
     try {
-      // Create a new announcement object including the filenames
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -476,30 +418,21 @@ app.post(
         title,
         content,
         createdBy,
-        files: files, // Include the filenames in the announcement object
+        files: files,
       };
-
-      // Create a new announcement document in the database
       const announcement = await Announcement.create(newAnnouncement);
-
-      // Find the class by its ID and push the new announcement
       const updatedClass = await Class.findByIdAndUpdate(
         classId,
         { $push: { announcements: announcement } },
         { new: true }
-      ).populate("announcements.createdBy", "name email"); // Populate createdBy field with Profile data
-      
+      ).populate("announcements.createdBy", "name email"); 
       const studentIds = updatedClass.students;
       const owner = await Profile.findById(updatedClass.owner);
       if (!updatedClass) {
         return res.status(404).json({ message: "Class not found" });
       }
-
-      // Fetch student documents and extract emails
       const students = await Profile.find({ _id: { $in: studentIds } });
       const studentEmails = students.map(student => student.email);
-
-      // Send email to each student
       studentEmails.forEach(async (email) => {
         const mailOptions = {
           from: process.env.EMAIL,
@@ -507,13 +440,11 @@ app.post(
           subject: 'New Announcement in Your Class',
           text: `Hello,\n\nA new announcement has been posted in your class ${updatedClass.name}.\n\n${content}\n\nRegards,\n${owner.name}`
         };
-        
-        // Send the email
         await transporter.sendMail(mailOptions);
         console.log(`Email sent to ${email}`);
       });
 
-      res.status(201).json(updatedClass); // Return the updated class with the new announcement
+      res.status(201).json(updatedClass); 
     } catch (error) {
       console.error("Error adding announcement:", error);
       res.status(500).json({ message: "Internal server error" });
@@ -524,59 +455,50 @@ app.post('/classes/:classId/announcements/:announcementId/add-message', async (r
   try {
     const { classId, announcementId } = req.params;
     const { messageContent } = req.body;
-    
-    // Validate if classId and announcementId are valid MongoDB ObjectId
+
     if (!mongoose.Types.ObjectId.isValid(classId) || !mongoose.Types.ObjectId.isValid(announcementId)) {
       return res.status(400).json({ error: 'Invalid classId or announcementId' });
     }
-    
-    // Find the announcement by classId and announcementId
+
     const announcement = await Announcement.findOne({ _id: announcementId });
     if (!announcement) {
       return res.status(404).json({ error: 'Announcement not found' });
     }
-    
-    // Add the message to the announcement
+
     announcement.messages.push({
       content: messageContent,
-      sender: req.body.sender, // Assuming sender info is available in the request body
+      sender: req.body.sender,
       createdAt: new Date(),
     });
 
-    // Save the updated announcement
     await announcement.save();
 
-    // Update the parent class with the updated announcement
     const parentClass = await Class.findOne({ _id: classId });
     if (!parentClass) {
       return res.status(404).json({ error: 'Class not found' });
     }
 
-    // Find the index of the announcement in the class's announcements array
     const announcementIndex = parentClass.announcements.findIndex(a => a._id.toString() === announcementId);
     if (announcementIndex === -1) {
       return res.status(404).json({ error: 'Announcement not found in class' });
     }
 
-    // Update the class's announcements array with the updated announcement
     parentClass.announcements[announcementIndex] = announcement;
 
-    // Save the updated class
     await parentClass.save();
 
-    res.json(announcement); // Return the updated announcement
+    res.json(announcement); 
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Server error' });
   }
 });
-//--------------------------------------------------LOGIN AND REGISTER--------------------------------------------------
+
 
 app.post("/api/register", async (req, res) => {
   try {
     const { name, username, password, isInstructor } = req.body;
 
-    // Check if the username already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res
@@ -584,14 +506,11 @@ app.post("/api/register", async (req, res) => {
         .send("Username already exists. Please choose a different username.");
     }
 
-    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save user
     const user = new User({ username, password: hashedPassword, isInstructor });
     await user.save();
 
-    // Save profile
     const newProfile = new Profile({
       name,
       email: username,
@@ -611,28 +530,19 @@ app.post("/api/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Find user by username
+
     const user = await User.findOne({ username });
 
-    // If user doesn't exist or password doesn't match, return error
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({ error: "Invalid credentials" });
     }
 
-    // Find user profile
     const profile = await Profile.findOne({ email: username });
-    const profileId = profile._id; // Get profile ID
-
-
-    // Generate JWT token
+    const profileId = profile._id;
     const token = jwt.sign({ userId: user._id, username }, "secret-key", {
       expiresIn: "1h",
     });
-
-    // Set cookie with token
     res.cookie("token", token, { httpOnly: true });
-
-    // Return user data and profile ID
     res.status(200).json({ user, profileId, username: profile.email });
   } catch (error) {
     console.error("Error logging in:", error);
@@ -640,28 +550,18 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-// Profile API
 app.get("/api/profile", async (req, res) => {
   try {
-    // Check if token is present in cookies
     const token = req.cookies.token;
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-
-    // Verify token
     const decoded = jwt.verify(token, "secret-key");
     const userId = decoded.username;
-
-    // Find user profile using userId
     const profile = await Profile.findOne({ username: userId });
-
-    // If profile not found, return error
     if (!profile) {
       return res.status(404).json({ error: "Profile not found" });
     }
-
-    // Return profile data
     res.json(profile);
   } catch (error) {
     console.error("Error fetching profile:", error);
@@ -673,17 +573,12 @@ app.post("/api/update-password", async (req, res) => {
   const { username, newPassword } = req.body;
 
   try {
-    // Find the user by username
     const user = await User.findOne({ username });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    // Hash the new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-    // Update the user's password
     user.password = hashedPassword;
     await user.save();
 
@@ -696,7 +591,6 @@ app.post("/api/update-password", async (req, res) => {
 app.get("/", (req, res) => {
   res.send("Welcome to the homepage!");
 });
-//--------------------------------------------------FORGET PASSWORD SECTION--------------------------------------------------
 app.post("/api/send-otp", async (req, res) => {
   const { username } = req.body;
 
@@ -728,10 +622,10 @@ app.post("/api/send-otp", async (req, res) => {
         console.error("Error sending email:", error);
         res
           .status(500)
-          .json({ error: "Failed to send OTP. Please try again." }); // Send error response if email fails
+          .json({ error: "Failed to send OTP. Please try again." }); 
       } else {
         console.log("Email sent:", info.response);
-        res.status(200).json({ message: "OTP sent successfully", otp: otp }); // Send success response with OTP
+        res.status(200).json({ message: "OTP sent successfully", otp: otp }); 
       }
     });
   } catch (error) {
@@ -739,7 +633,7 @@ app.post("/api/send-otp", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-// Update profile by username
+
 
 app.post("/api/verify-otp", async (req, res) => {
   const { otp, mailOTP } = req.body;
@@ -801,27 +695,27 @@ app.get('/classes/:classId/students', async (req, res) => {
   const classId = req.params.classId;
   
   try {
-    // Find the class data by ID
+    
     const classData = await Class.findById(classId);
 
     if (!classData) {
       return res.status(404).json({ error: 'Class not found' });
     }
 
-    const studentIds = classData.students; // Array of student IDs from classData
+    const studentIds = classData.students; 
     const studentNames = [];
 
-    // Iterate over the studentIds array
+    
     for (const studentId of studentIds) {
-      // Find the user by ID and retrieve the name
+      
       console.log(studentId);
       const user = await Profile.findById(studentId);
       if (user) {
-        studentNames.push(user.name); // Push the name to studentNames array
+        studentNames.push(user.name); 
       }
     }
 
-    res.json(studentNames); // Send the array of student names in the response
+    res.json(studentNames);
   } catch (error) {
     console.error('Error fetching class data:', error);
     res.status(500).json({ error: 'Internal server error' });
